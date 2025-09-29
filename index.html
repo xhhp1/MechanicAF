@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -500,8 +501,8 @@ function vac_generateVacation(){
     return;
   }
 
-  if(period === "مساءً" && startHour < 12) startHour += 12;
-  if(period === "صباحًا" && startHour === 12) startHour = 0;
+  if(period === "م" && startHour < 12) startHour += 12;
+  if(period === "ص" && startHour === 12) startHour = 0;
 
   // use Riyadh TZ like original
   let tzDate = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Riyadh" })); 
@@ -519,7 +520,7 @@ function vac_generateVacation(){
     let d=String(date.getDate()).padStart(2,'0');
     let h=date.getHours();
     let min=String(date.getMinutes()).padStart(2,'0');
-    let per=h>=12?"مساءً":"صباحًا";
+    let per=h>=12?"م":"ص";
     h=h%12; h=h?h:12;
     return `${y}/${m}/${d}| ${h}:${min}${per}`;
   }
@@ -542,10 +543,15 @@ function vac_generateVacation(){
 ***تنتهي اجازتك بنفس التوقيت اللي بترجع فية .***  
 
 ***\`تنويهات هامة يجب قرائتها :\`***  
+
 ***01/ تبدأ الإجازة الخاصة بك في وقتها المحدد، ويُمنع تغيير الوظيفة قبل المدة المحددة لبدء الإجازة.***  
+
 ***02/ يجب العودة من الإجازة قبل انتهاء مدتها وتغيير الوظيفة إلى قطاع الميكانيك. من يخالف ذلك سيُعتبر تهرباً وظيفياً وستتم محاسبته من قِبل إدارة الكراج.***  
+
 ***03/ في حال عندك عذر وقدمته بفتح تكت اجازة سيتم فقط تصفير اجازاتك مهما كان السبب وعدم اعطائك تهرب وظيفي***  
+
 ***04/ في حال تم سجنك رقابيا سيتم تطبيق العقوبه عليك حسب [قوانين الاجازات](https://ptb.discord.com/channels/1071933157097615480/1071934713524133918/1416990256070135900) ***  
+
 ***كذلك في حال تعديت نص الاسبوع ( الثلاثاء ) او كان رصيدك اقل من نص اجماليك سيتم تصفيرك الاسبوع الحالي والقادم***  
 
 <@&1149742928953086105>`;
@@ -786,4 +792,3 @@ show('vacBox');
 
 </body>
 </html>
-
