@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -181,8 +180,8 @@
     <input type="number" id="vac_startHour" placeholder="الساعة (1-12)">
     <input type="number" id="vac_startMinute" placeholder="الدقيقة (0-59)">
     <select id="vac_startPeriod">
-      <option value="صباحًا">صباحًا</option>
-      <option value="مساءً">مساءً</option>
+      <option value="ص">صباحًا</option>
+      <option value="م">مساءً</option>
     </select>
   </div>
 
@@ -228,6 +227,7 @@
 
   <label>رقم الإنذار الوظيفي</label>
   <select id="vio_warningLevel">
+    <option value="شفهي">شفهي</option>
     <option value="اول">اول</option>
     <option value="ثاني">ثاني</option>
     <option value="نهائي">نهائي</option>
@@ -394,6 +394,7 @@
   <label>الإنذار المستحق؟</label>
   <select id="abs_warning">
     <option value="">اختر الإنذار</option>
+    <option>شفهي</option>
     <option>اول</option>
     <option>ثاني</option>
     <option>نهائي</option>
@@ -792,4 +793,3 @@ show('vacBox');
 
 </body>
 </html>
-
