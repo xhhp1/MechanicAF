@@ -217,7 +217,6 @@
       <span>&#9662;</span>
     </div>
     <div class="cd-panel" id="vio_panel" role="listbox" aria-hidden="true">
-      <!-- نفس القائمة الطويلة -->
       <div class="cd-option">التهرب من المحاسبة</div>
       <div class="cd-option">استخدام خواص الميكانيك للمصلحة الشخصية</div>
       <div class="cd-option">عدم احترام  الميكانيكي او القيادة او المشرف</div>
@@ -298,7 +297,6 @@
       <span>&#9662;</span>
     </div>
     <div class="cd-panel" id="abs_panel" role="listbox" aria-hidden="true">
-      <!-- نفس القائمة الطويلة (محذوفة هنا للاختصار) -->
       <div class="cd-option">التهرب من المحاسبة</div>
       <div class="cd-option">استخدام خواص الميكانيك للمصلحة الشخصية</div>
       <div class="cd-option">عدم احترام  الميكانيكي او القيادة او المشرف</div>
@@ -658,11 +656,6 @@ ${nameCode}
     return;
   }
 }
-function res_copy(){
-  const out = document.getElementById('res_output');
-  if(!out || !out.innerText.trim()){ alert("⚠️ لا يوجد نتيجة لنسخها"); return; }
-  navigator.clipboard.writeText(out.innerText).then(()=>alert("✅ تم النسخ"));
-}
 
 /* ---------- VIOLATIONS (المخالفات) ---------- */
 function vio_generate(){
@@ -731,11 +724,6 @@ function vio_generate(){
   const out = document.getElementById('vio_output');
   out.innerText = result; out.style.display='block';
 }
-function vio_copy(){
-  const out = document.getElementById('vio_output');
-  if(!out || !out.innerText.trim()){ alert("⚠️ لا يوجد نتيجة لنسخها"); return; }
-  navigator.clipboard.writeText(out.innerText).then(()=>alert("✅ تم النسخ"));
-}
 
 /* ---------- ABSENT (فني لم يحضر) ---------- */
 function abs_generate(){
@@ -769,11 +757,6 @@ https://ptb.discord.com/channels/1071933157097615480/1071934723858894868 ***
  <@&1071933357136556183>  - <@&1142626431101325403>`;
   const out = document.getElementById('abs_output');
   out.innerText = resultText; out.style.display='block';
-}
-function abs_copy(){
-  const out = document.getElementById('abs_output');
-  if(!out || !out.innerText.trim()){ alert("⚠️ لا يوجد نتيجة لنسخها"); return; }
-  navigator.clipboard.writeText(out.innerText).then(()=>alert("✅ تم النسخ"));
 }
 
 /* ---------- EXTERNAL VACATION (إجازة خارجية) ---------- */
@@ -815,10 +798,61 @@ function ext_generate(){
   const out = document.getElementById('ext_output');
   out.innerText = result; out.style.display='block';
 }
+
+/* ===================== COPY HELPERS (FIX) ===================== */
+// Robust copy helper with Clipboard API + fallback
+function copyToClipboard(text){
+  if(!text || !text.trim()){
+    alert("⚠️ لا يوجد نتيجة لنسخها");
+    return;
+  }
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text)
+      .then(()=>alert("✅ تم النسخ"))
+      .catch(()=>fallbackCopy(text));
+  } else {
+    fallbackCopy(text);
+  }
+
+  function fallbackCopy(t){
+    const ta = document.createElement('textarea');
+    ta.value = t;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      alert("✅ تم النسخ");
+    } catch (e){
+      alert("❌ لم يتم النسخ تلقائيًا. انسخ يدويًا.");
+    } finally {
+      document.body.removeChild(ta);
+    }
+  }
+}
+
+// Implement missing vac_copyResult and route all copy buttons to the same helper
+function vac_copyResult(){
+  const out = document.getElementById('vac_output');
+  copyToClipboard(out ? out.innerText : "");
+}
+function res_copy(){
+  const out = document.getElementById('res_output');
+  copyToClipboard(out ? out.innerText : "");
+}
+function vio_copy(){
+  const out = document.getElementById('vio_output');
+  copyToClipboard(out ? out.innerText : "");
+}
+function abs_copy(){
+  const out = document.getElementById('abs_output');
+  copyToClipboard(out ? out.innerText : "");
+}
 function ext_copy(){
   const out = document.getElementById('ext_output');
-  if(!out || !out.innerText.trim()){ alert("⚠️ لا يوجد نتيجة لنسخها"); return; }
-  navigator.clipboard.writeText(out.innerText).then(()=>alert("✅ تم النسخ"));
+  copyToClipboard(out ? out.innerText : "");
 }
 
 /* ---------- default tab ---------- */
@@ -827,4 +861,3 @@ show('vacBox');
 
 </body>
 </html>
-
