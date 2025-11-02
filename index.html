@@ -45,6 +45,11 @@
   .time-group{ display:flex; gap:8px; }
   .time-group input, .time-group select{ flex:1; }
 
+  .manual-wrap{ display:flex; align-items:center; gap:8px; margin-top:8px; }
+  .manual-wrap input[type="checkbox"]{ width:auto; }
+
+  .hint{ font-size:13px; opacity:0.85; margin-top:6px; }
+
   .button-row{ display:flex; gap:12px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
   .btn{ padding:12px 22px; background:var(--gold); color:#111; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
   .btn:hover{ background:#c6b142; }
@@ -111,8 +116,11 @@
     <label>الرصيد المتبقي (بالساعات)</label>
     <input type="number" id="vac_balance" placeholder="عدد الساعات">
 
-    <label>وقت بدء الإجازة</label>
-    <div class="time-group">
+    <div class="manual-wrap">
+      <input type="checkbox" id="vac_manualTime" onchange="vac_toggleManualTime()">
+      <label for="vac_manualTime" style="margin:0;font-weight:normal">لإدخال الوقت بشكل يدوي</label>
+    </div>
+       <div id="vac_timeRow" class="time-group" style="display:none">
       <input type="number" id="vac_startHour" placeholder="الساعة (1-12)">
       <input type="number" id="vac_startMinute" placeholder="الدقيقة (0-59)">
       <select id="vac_startPeriod">
@@ -297,6 +305,7 @@
       <span>&#9662;</span>
     </div>
     <div class="cd-panel" id="abs_panel" role="listbox" aria-hidden="true">
+      <!-- نفس القائمة مثل المخالفات للاختصار -->
       <div class="cd-option">التهرب من المحاسبة</div>
       <div class="cd-option">استخدام خواص الميكانيك للمصلحة الشخصية</div>
       <div class="cd-option">عدم احترام  الميكانيكي او القيادة او المشرف</div>
@@ -461,6 +470,12 @@ function vac_toggleFields(){
   else{ internal.style.display='block'; secondment.style.display='none'; }
 }
 
+/* جديد: إظهار/إخفاء إدخال الوقت اليدوي */
+function vac_toggleManualTime(){
+  const manual = document.getElementById('vac_manualTime').checked;
+  document.getElementById('vac_timeRow').style.display = manual ? 'flex' : 'none';
+}
+
 /* ---------- VIOLATIONS: hide fine on "شفهي" ---------- */
 function vio_toggleByLevel(){
   const level = document.getElementById('vio_warningLevel').value;
@@ -506,27 +521,44 @@ function vac_generateVacation(){
     return;
   }
 
+  // ===== الإجازة الداخلية =====
   const copyId = document.getElementById('vac_copyId').value.trim();
   const duration = parseInt(document.getElementById('vac_duration').value) || 0;
   const balance = parseInt(document.getElementById('vac_balance').value) || 0;
-  let startHour = parseInt(document.getElementById('vac_startHour').value) || 0;
-  let startMinute = parseInt(document.getElementById('vac_startMinute').value) || 0;
-  const period = document.getElementById('vac_startPeriod').value;
 
-  if(!copyId || duration <= 0 || balance <= 0 || startHour <= 0){
-    alert("⚠️ يرجى إدخال جميع الحقول بشكل صحيح"); return;
+  if(!copyId || duration <= 0 || balance <= 0){
+    alert("⚠️ يرجى إدخال الكوبي ايدي والمدة والرصد المتبقي بشكل صحيح"); return;
   }
 
-  if(period === "م" && startHour < 12) startHour += 12;
-  if(period === "ص" && startHour === 12) startHour = 0;
+  const manual = document.getElementById('vac_manualTime').checked;
 
-  let tzDate = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Riyadh" })); 
-  let yyyy = tzDate.getFullYear();
-  let mm = String(tzDate.getMonth()+1).padStart(2,'0');
-  let dd = String(tzDate.getDate()).padStart(2,'0');
+  let startDate, endDate;
 
-  let startDate = new Date(`${yyyy}-${mm}-${dd}T${String(startHour).padStart(2,'0')}:${String(startMinute).padStart(2,'0')}:00`);
-  let endDate = new Date(startDate); endDate.setHours(endDate.getHours() + duration);
+  if(manual){
+    // === السلوك القديم (إدخال يدوي) ===
+    let startHour = parseInt(document.getElementById('vac_startHour').value) || 0;
+    let startMinute = parseInt(document.getElementById('vac_startMinute').value) || 0;
+    const period = document.getElementById('vac_startPeriod').value;
+
+    if(startHour <= 0 || startHour > 12 || startMinute < 0 || startMinute > 59){
+      alert("⚠️ أدخل ساعة بين 1-12 ودقيقة بين 0-59"); return;
+    }
+    if(period === "م" && startHour < 12) startHour += 12;
+    if(period === "ص" && startHour === 12) startHour = 0;
+
+    let tzDate = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Riyadh" })); 
+    let yyyy = tzDate.getFullYear();
+    let mm = String(tzDate.getMonth()+1).padStart(2,'0');
+    let dd = String(tzDate.getDate()).padStart(2,'0');
+
+    startDate = new Date(`${yyyy}-${mm}-${dd}T${String(startHour).padStart(2,'0')}:${String(startMinute).padStart(2,'0')}:00`);
+    endDate = new Date(startDate); endDate.setHours(endDate.getHours() + duration);
+  }else{
+    // === السلوك الجديد (تلقائي +5 دقائق بتوقيت مكة) ===
+    const tzNow = new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Riyadh"}));
+    startDate = new Date(tzNow.getTime() + 5*60*1000);
+    endDate = new Date(startDate.getTime() + duration*60*60*1000);
+  }
 
   function formatDate(date){
     let y=date.getFullYear(), m=String(date.getMonth()+1).padStart(2,'0'), d=String(date.getDate()).padStart(2,'0');
@@ -535,7 +567,7 @@ function vac_generateVacation(){
     return `${y}/${m}/${d}| ${h}:${min}${per}`;
   }
 
-  const headerText = type === "فني" ? "الفني المحترم" : "المشرف المحترم";
+  const headerText = document.getElementById('vac_vacType').value === "فني" ? "الفني المحترم" : "المشرف المحترم";
 
   const result =
 `***\` إجازة داخلية \`*** 
@@ -546,8 +578,8 @@ function vac_generateVacation(){
 
 ***\`الرصيد المتبقي :\` ${balance - duration} ساعة***  
 
-***من تاريخ ${formatDate(startDate)}***  
-***الى تاريخ ${formatDate(endDate)}***  
+***من تاريخ ${formatDate(startDate)} ***  
+***الى تاريخ ${formatDate(endDate)} ***  
 
 ***\`ملاحظة :\`***  
 ***تنتهي اجازتك بنفس التوقيت اللي بترجع فية .***  
@@ -740,15 +772,15 @@ function abs_generate(){
   const resultText =
 `***\`  نموذج إستدعاء للفني الذي لم يحضر  \`***
 
-***\`اسم الفني\`***  <@${copyId}>
+***\`اسم الفني\` <@${copyId}> ***
 
-***\`سبب الاستدعاء \`***   ${reason}
+***\`سبب الاستدعاء \` ${reason} ***
 
-***\`قيمة المخالفة\`*** ${Number(penalty).toLocaleString()}
+***\`قيمة المخالفة\` ${Number(penalty).toLocaleString()} ***
 
-***\` الانذار المستحق ؟ : \`*** ${warning}
+***\` الانذار المستحق ؟ : \` ${warning} *** 
 
-***\`لم تتم مخالفته بسبب\`*** ${notPunished}
+***\`لم تتم مخالفته بسبب\` ${notPunished} ***
 
 ***الي يجيه الفني يعلمه سبب المخالفة  وينزله المخالفة في روم
 https://ptb.discord.com/channels/1071933157097615480/1071934723858894868 ***  
@@ -781,8 +813,8 @@ function ext_generate(){
 
 ***\`المــــدة :\` ${days} يوم***
  
-***من تاريخ ${fmtYMD(startDate)}***
-*** الى تاريخ ${fmtYMD(endDate)}***
+***من تاريخ ${fmtYMD(startDate)}*** 
+*** الى تاريخ ${fmtYMD(endDate)}*** 
 
 ***\`ملاحظة :\`***
 
@@ -800,7 +832,6 @@ function ext_generate(){
 }
 
 /* ===================== COPY HELPERS (FIX) ===================== */
-// Robust copy helper with Clipboard API + fallback
 function copyToClipboard(text){
   if(!text || !text.trim()){
     alert("⚠️ لا يوجد نتيجة لنسخها");
@@ -833,7 +864,6 @@ function copyToClipboard(text){
   }
 }
 
-// Implement missing vac_copyResult and route all copy buttons to the same helper
 function vac_copyResult(){
   const out = document.getElementById('vac_output');
   copyToClipboard(out ? out.innerText : "");
@@ -861,8 +891,3 @@ show('vacBox');
 
 </body>
 </html>
-
-
-
-
-
