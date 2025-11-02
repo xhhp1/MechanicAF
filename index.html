@@ -48,8 +48,6 @@
   .manual-wrap{ display:flex; align-items:center; gap:8px; margin-top:8px; }
   .manual-wrap input[type="checkbox"]{ width:auto; }
 
-  .hint{ font-size:13px; opacity:0.85; margin-top:6px; }
-
   .button-row{ display:flex; gap:12px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
   .btn{ padding:12px 22px; background:var(--gold); color:#111; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
   .btn:hover{ background:#c6b142; }
@@ -102,25 +100,40 @@
   <select id="vac_vacType" onchange="vac_toggleFields()">
     <option value="فني">فني</option>
     <option value="مشرف">مشرف</option>
-    <option value="الانتدابات">الانتدابات</option>
+    <option value="الانتدابات">الانتدابات</option> <!-- تحت مشرف -->
+    <option value="مكافأة قيادية">مكافأة قيادية</option>
+    <option value="إجازة متميز الأسبوع">إجازة متميز الأسبوع</option>
+    <option value="إجازة تاجر">إجازة تاجر</option>
   </select>
 
   <!-- ===== حقول الإجازة الداخلية ===== -->
   <div id="vac_internalFields">
+
+    <!-- يظهر فقط عند مكافأة قيادية (ومكانه فوق الكوبي ايدي) -->
+    <div id="vac_leadHeaderBox" style="display:none">
+      <label>المخاطَب في الرسالة</label>
+      <select id="vac_leadHeader">
+        <option value="">اختر المكافأة لمن؟</option>
+        <option value="المشرف المحترم">المشرف المحترم</option>
+        <option value="الفني المحترم">الفني المحترم</option>
+      </select>
+    </div>
+
     <label>الكوبي ايدي</label>
     <input type="number" id="vac_copyId" placeholder="أدخل الكوبي ايدي">
 
     <label>المــــدة (بالساعات)</label>
     <input type="number" id="vac_duration" placeholder="عدد الساعات">
 
-    <label>الرصيد المتبقي (بالساعات)</label>
+    <!-- يتحول هذا الحقل إلى كوبي القيادة عند اختيار "مكافأة قيادية" -->
+    <label id="vac_balanceLabel">الرصيد المتبقي (بالساعات)</label>
     <input type="number" id="vac_balance" placeholder="عدد الساعات">
 
     <div class="manual-wrap">
       <input type="checkbox" id="vac_manualTime" onchange="vac_toggleManualTime()">
       <label for="vac_manualTime" style="margin:0;font-weight:normal">لإدخال الوقت بشكل يدوي</label>
     </div>
-       <div id="vac_timeRow" class="time-group" style="display:none">
+    <div id="vac_timeRow" class="time-group" style="display:none">
       <input type="number" id="vac_startHour" placeholder="الساعة (1-12)">
       <input type="number" id="vac_startMinute" placeholder="الدقيقة (0-59)">
       <select id="vac_startPeriod">
@@ -225,60 +238,7 @@
       <span>&#9662;</span>
     </div>
     <div class="cd-panel" id="vio_panel" role="listbox" aria-hidden="true">
-      <div class="cd-option">التهرب من المحاسبة</div>
-      <div class="cd-option">استخدام خواص الميكانيك للمصلحة الشخصية</div>
-      <div class="cd-option">عدم احترام  الميكانيكي او القيادة او المشرف</div>
-      <div class="cd-option">استقاله برتبة مستوى متدرب او مستوى 1</div>
-      <div class="cd-option">اثاره الجدل بالشات العام او رسائل الميكانيك</div>
-      <div class="cd-option">أي تلاعب بالفواتير</div>
-      <div class="cd-option">استخراج مركبات او استئجار دباب بهدف الحجز</div>
-      <div class="cd-option">الاجرام بوظيف الميكانيك</div>
-      <div class="cd-option">تواجد في مدن اخرا</div>
-      <div class="cd-option">الخروج من غرفة العمليات دون تسليم لجميع المهام الميدانية ( العمليات + النائب + الاتصالات)</div>
-      <div class="cd-option">دخول موجه الرقابة والتفتيش</div>
-      <div class="cd-option">السجن الرقابي</div>
-      <div class="cd-option">عدم احترام افراد القطاعات و المواطنين - التهرب من تنبيهات المشرف</div>
-      <div class="cd-option">التصديم المتعمد لغرض تعديل المركبه</div>
-      <div class="cd-option">عدم الجدية بالميدان</div>
-      <div class="cd-option">تخطي مراجع</div>
-      <div class="cd-option">حيازه سلاح او ممنوعات</div>
-      <div class="cd-option">مخالفات التعديل و التزويد</div>
-      <div class="cd-option">تعديل و تزويد المركبات التي تملك اكسسوارات أو أكسترا اسلحة</div>
-      <div class="cd-option">فحص او تعديل و تزويد المركبات في خارج اوقات الافتتاح</div>
-      <div class="cd-option">التلاعب في مسارات التعديل و التزويد</div>
-      <div class="cd-option">مخالفة قوانين التعديل و التزويد (تعديل مركبة بدون توجيه)</div>
-      <div class="cd-option">مخالفة قوانين التعديل و التزويد</div>
-      <div class="cd-option">مخالفة قوانين التعديل و التزويد (عدم مراجعة التقرير بعد ارساله )</div>
-      <div class="cd-option">تعديل و تزويد المركبة الخاصه بـ المهندس بنفسه</div>
-      <div class="cd-option">الصفع او الضرب</div>
-      <div class="cd-option">الانتداب وقت التوظيف</div>
-      <div class="cd-option">دخول روم الكادر النسائي</div>
-      <div class="cd-option">التدخل في الشؤون الأداريه</div>
-      <div class="cd-option">تعديل الزي الرسمي للقطاع او اضافه الوشوم</div>
-      <div class="cd-option">الاعتراض على الترقية او مخالفة بدون التحقق من اكمال الشروط</div>
-      <div class="cd-option">فتح تكت اجازة غير مطابقة للشروط</div>
-      <div class="cd-option">التاخر في العودة من الاجازة الداخلية</div>
-      <div class="cd-option">تغيير الوظيفة قبل ابتداء الاجازة الداخلية</div>
-      <div class="cd-option">التهرب من استلام مهام العمليات او نائب العمليات او مركز الاتصالات</div>
-      <div class="cd-option">انزال السطحة اثناء القيادة</div>
-      <div class="cd-option">اصلاح المركبات من خلال قائمة F6 ( بإستثناء المركبات الحكومية )</div>
-      <div class="cd-option">ترك البوابات الكراج مفتوحة</div>
-      <div class="cd-option">تخطي مراجع في الراديو</div>
-      <div class="cd-option">القفز من الدرج داخل SRT</div>
-      <div class="cd-option">عدم الاستجابة للاستدعاء من قبل المشرفين خلال 24 ساعة</div>
-      <div class="cd-option">عدم اخذ كود 7 و التأفيك</div>
-      <div class="cd-option">التسطيح داخل حجز لوس دون توجيه</div>
-      <div class="cd-option">التوجه للأماكن المحضوره دون توجيه</div>
-      <div class="cd-option">القيادة المتهورة</div>
-      <div class="cd-option">عدم مطابقة الاسم + الاسم في فايف ام</div>
-      <div class="cd-option">التسطيح داخل نداء الاستغاثة</div>
-      <div class="cd-option">اهمال مركبة</div>
-      <div class="cd-option">عدم الاستجابة على الراديو - عدم تطبيق توجيهات العمليات او النائب</div>
-      <div class="cd-option">عدم الالتزام في قائمة اسعار الكراج</div>
-      <div class="cd-option">اخذ كود 7 و عدم الرجوع بعد الوقت المحدد</div>
-      <div class="cd-option">عدم تسجيل الدخول في الوظيفة</div>
-      <div class="cd-option">البقاء في روم الكراج</div>
-      <div class="cd-option">عدم دخول الموجة</div>
+      <!-- يتم البناء ديناميكيًا من Array في الأسفل -->
     </div>
   </div>
   <input type="hidden" id="vio_selected" value="">
@@ -305,61 +265,7 @@
       <span>&#9662;</span>
     </div>
     <div class="cd-panel" id="abs_panel" role="listbox" aria-hidden="true">
-      <!-- نفس القائمة مثل المخالفات للاختصار -->
-      <div class="cd-option">التهرب من المحاسبة</div>
-      <div class="cd-option">استخدام خواص الميكانيك للمصلحة الشخصية</div>
-      <div class="cd-option">عدم احترام  الميكانيكي او القيادة او المشرف</div>
-      <div class="cd-option">استقاله برتبة مستوى متدرب او مستوى 1</div>
-      <div class="cd-option">اثاره الجدل بالشات العام او رسائل الميكانيك</div>
-      <div class="cd-option">أي تلاعب بالفواتير</div>
-      <div class="cd-option">استخراج مركبات او استئجار دباب بهدف الحجز</div>
-      <div class="cd-option">الاجرام بوظيف الميكانيك</div>
-      <div class="cd-option">تواجد في مدن اخرا</div>
-      <div class="cd-option">الخروج من غرفة العمليات دون تسليم لجميع المهام الميدانية ( العمليات + النائب + الاتصالات)</div>
-      <div class="cd-option">دخول موجه الرقابة والتفتيش</div>
-      <div class="cd-option">السجن الرقابي</div>
-      <div class="cd-option">عدم احترام افراد القطاعات و المواطنين - التهرب من تنبيهات المشرف</div>
-      <div class="cd-option">التصديم المتعمد لغرض تعديل المركبه</div>
-      <div class="cd-option">عدم الجدية بالميدان</div>
-      <div class="cd-option">تخطي مراجع</div>
-      <div class="cd-option">حيازه سلاح او ممنوعات</div>
-      <div class="cd-option">مخالفات التعديل و التزويد</div>
-      <div class="cd-option">تعديل و تزويد المركبات التي تملك اكسسوارات أو أكسترا اسلحة</div>
-      <div class="cd-option">فحص او تعديل و تزويد المركبات في خارج اوقات الافتتاح</div>
-      <div class="cd-option">التلاعب في مسارات التعديل و التزويد</div>
-      <div class="cd-option">مخالفة قوانين التعديل و التزويد (تعديل مركبة بدون توجيه)</div>
-      <div class="cd-option">مخالفة قوانين التعديل و التزويد</div>
-      <div class="cd-option">مخالفة قوانين التعديل و التزويد (عدم مراجعة التقرير بعد ارساله )</div>
-      <div class="cd-option">تعديل و تزويد المركبة الخاصه بـ المهندس بنفسه</div>
-      <div class="cd-option">الصفع او الضرب</div>
-      <div class="cd-option">الانتداب وقت التوظيف</div>
-      <div class="cd-option">دخول روم الكادر النسائي</div>
-      <div class="cd-option">التدخل في الشؤون الأداريه</div>
-      <div class="cd-option">تعديل الزي الرسمي للقطاع او اضافه الوشوم</div>
-      <div class="cd-option">الاعتراض على الترقية او مخالفة بدون التحقق من اكمال الشروط</div>
-      <div class="cd-option">فتح تكت اجازة غير مطابقة للشروط</div>
-      <div class="cd-option">التاخر في العودة من الاجازة الداخلية</div>
-      <div class="cd-option">تغيير الوظيفة قبل ابتداء الاجازة الداخلية</div>
-      <div class="cd-option">التهرب من استلام مهام العمليات او نائب العمليات او مركز الاتصالات</div>
-      <div class="cd-option">انزال السطحة اثناء القيادة</div>
-      <div class="cd-option">اصلاح المركبات من خلال قائمة F6 ( بإستثناء المركبات الحكومية )</div>
-      <div class="cd-option">ترك البوابات الكراج مفتوحة</div>
-      <div class="cd-option">تخطي مراجع في الراديو</div>
-      <div class="cd-option">القفز من الدرج داخل SRT</div>
-      <div class="cd-option">عدم الاستجابة للاستدعاء من قبل المشرفين خلال 24 ساعة</div>
-      <div class="cd-option">عدم اخذ كود 7 و التأفيك</div>
-      <div class="cd-option">التسطيح داخل حجز لوس دون توجيه</div>
-      <div class="cd-option">التوجه للأماكن المحضوره دون توجيه</div>
-      <div class="cd-option">القيادة المتهورة</div>
-      <div class="cd-option">عدم مطابقة الاسم + الاسم في فايف ام</div>
-      <div class="cd-option">التسطيح داخل نداء الاستغاثة</div>
-      <div class="cd-option">اهمال مركبة</div>
-      <div class="cd-option">عدم الاستجابة على الراديو - عدم تطبيق توجيهات العمليات او النائب</div>
-      <div class="cd-option">عدم الالتزام في قائمة اسعار الكراج</div>
-      <div class="cd-option">اخذ كود 7 و عدم الرجوع بعد الوقت المحدد</div>
-      <div class="cd-option">عدم تسجيل الدخول في الوظيفة</div>
-      <div class="cd-option">البقاء في روم الكراج</div>
-      <div class="cd-option">عدم دخول الموجة</div>
+      <!-- يتم البناء ديناميكيًا من Array في الأسفل -->
     </div>
   </div>
   <input type="hidden" id="abs_selected" value="">
@@ -391,7 +297,6 @@
 <div id="extBox" class="container">
   <h2>✈️نموذج إجازة خارجية✈️</h2>
 
-  <!-- جديد: الاجازة لمن؟ -->
   <label>الاجازة لمن؟</label>
   <select id="ext_personType">
     <option value="فني">فني</option>
@@ -413,6 +318,77 @@
 </div>
 
 <script>
+/* ---------- مصدر موحّد لعناصر المخالفات ---------- */
+const VIOLATIONS = [
+  "التهرب من المحاسبة",
+  "استخدام خواص الميكانيك للمصلحة الشخصية",
+  "عدم احترام  الميكانيكي او القيادة او المشرف",
+  "استقاله برتبة مستوى متدرب او مستوى 1",
+  "اثاره الجدل بالشات العام او رسائل الميكانيك",
+  "أي تلاعب بالفواتير",
+  "استخراج مركبات او استئجار دباب بهدف الحجز",
+  "الاجرام بوظيفة الميكانيك",
+  "تواجد في مدن اخرا",
+  "الخروج من غرفة العمليات دون تسليم لجميع المهام الميدانية ( العمليات + النائب + الاتصالات)",
+  "دخول موجه الرقابة والتفتيش",
+  "السجن الرقابي",
+  "عدم احترام افراد القطاعات و المواطنين - التهرب من تنبيهات المشرف",
+  "التصديم المتعمد لغرض تعديل المركبه",
+  "عدم الجدية بالميدان",
+  "تخطي مراجع",
+  "حيازه سلاح او ممنوعات",
+  "مخالفات التعديل و التزويد",
+  "تعديل و تزويد المركبات التي تملك اكسسوارات أو أكسترا اسلحة",
+  "فحص او تعديل و تزويد المركبات في خارج اوقات الافتتاح",
+  "التلاعب في مسارات التعديل و التزويد",
+  "مخالفة قوانين التعديل و التزويد (تعديل مركبة بدون توجيه)",
+  "مخالفة قوانين التعديل و التزويد",
+  "مخالفة قوانين التعديل و التزويد (عدم مراجعة التقرير بعد ارساله )",
+  "تعديل و تزويد المركبة الخاصه بـ المهندس بنفسه",
+  "الصفع او الضرب",
+  "الانتداب وقت التوظيف",
+  "دخول روم الكادر النسائي",
+  "التدخل في الشؤون الأداريه",
+  "تعديل الزي الرسمي للقطاع او اضافه الوشوم",
+  "الاعتراض على الترقية او مخالفة بدون التحقق من اكمال الشروط",
+  "فتح تكت اجازة غير مطابقة للشروط",
+  "التاخر في العودة من الاجازة الداخلية",
+  "تغيير الوظيفة قبل ابتداء الاجازة الداخلية",
+  "التهرب من استلام مهام العمليات او نائب العمليات او مركز الاتصالات",
+  "انزال السطحة اثناء القيادة",
+  "اصلاح المركبات من خلال قائمة F6 ( بإستثناء المركبات الحكومية )",
+  "ترك البوابات الكراج مفتوحة",
+  "تخطي مراجع في الراديو",
+  "القفز من الدرج داخل SRT",
+  "عدم الاستجابة للاستدعاء من قبل المشرفين خلال 24 ساعة",
+  "عدم اخذ كود 7 و التأفيك",
+  "التسطيح داخل حجز لوس دون توجيه",
+  "التوجه للأماكن المحضوره دون توجيه",
+  "القيادة المتهورة",
+  "عدم مطابقة الاسم + الاسم في فايف ام",
+  "التسطيح داخل نداء الاستغاثة",
+  "اهمال مركبة",
+  "عدم الاستجابة على الراديو - عدم تطبيق توجيهات العمليات او النائب",
+  "عدم الالتزام في قائمة اسعار الكراج",
+  "اخذ كود 7 و عدم الرجوع بعد الوقت المحدد",
+  "عدم تسجيل الدخول في الوظيفة",
+  "البقاء في روم الكراج",
+  "عدم دخول الموجة"
+];
+
+/* يبني عناصر القائمة لوجهتي المخالفات/الاستدعاء */
+function populateOptions(panelId){
+  const panel = document.getElementById(panelId);
+  if(!panel) return;
+  panel.innerHTML = '';
+  VIOLATIONS.forEach(v=>{
+    const div = document.createElement('div');
+    div.className = 'cd-option';
+    div.textContent = v;
+    panel.appendChild(div);
+  });
+}
+
 /* ---------- UI helpers ---------- */
 function show(id){
   document.querySelectorAll('.container').forEach(c=>c.classList.remove('active'));
@@ -434,6 +410,8 @@ function toggleDropdown(name){
 function closeAllDropdowns(){
   document.querySelectorAll('.cd-panel').forEach(p=>{ p.style.display='none'; p.setAttribute('aria-hidden','true'); });
 }
+
+/* التقاط اختيار العنصر للدروبدونات المخصصة */
 document.addEventListener('click', function(e){
   if(e.target.closest('#vio_panel') && e.target.classList.contains('cd-option')){
     const val = e.target.innerText.trim();
@@ -466,11 +444,34 @@ function vac_toggleFields(){
   const type = document.getElementById('vac_vacType').value;
   const internal = document.getElementById('vac_internalFields');
   const secondment = document.getElementById('vac_secondmentFields');
-  if(type === 'الانتدابات'){ internal.style.display='none'; secondment.style.display='block'; }
-  else{ internal.style.display='block'; secondment.style.display='none'; }
+  const balanceLabel = document.getElementById('vac_balanceLabel');
+  const balanceInput = document.getElementById('vac_balance');
+  const leadHeaderBox = document.getElementById('vac_leadHeaderBox');
+  const leadHeaderSel = document.getElementById('vac_leadHeader');
+
+  if(type === 'الانتدابات'){
+    internal.style.display='none';
+    secondment.style.display='block';
+  } else {
+    internal.style.display='block';
+    secondment.style.display='none';
+  }
+
+  // مكافأة قيادية: إظهار المخاطَب وتبديل حقل الرصيد
+  if(type === 'مكافأة قيادية'){
+    balanceLabel.textContent = 'توقيع و اعتماد : ';
+    balanceInput.value = '';
+    balanceInput.placeholder = 'أدخل كوبي آيدي القيادة';
+    leadHeaderBox.style.display = 'block';
+  } else {
+    balanceLabel.textContent = 'الرصيد المتبقي (بالساعات)';
+    balanceInput.placeholder = 'عدد الساعات';
+    leadHeaderBox.style.display = 'none';
+    if(leadHeaderSel) leadHeaderSel.value = '';
+  }
 }
 
-/* جديد: إظهار/إخفاء إدخال الوقت اليدوي */
+/* إظهار/إخفاء إدخال الوقت اليدوي */
 function vac_toggleManualTime(){
   const manual = document.getElementById('vac_manualTime').checked;
   document.getElementById('vac_timeRow').style.display = manual ? 'flex' : 'none';
@@ -521,21 +522,28 @@ function vac_generateVacation(){
     return;
   }
 
-  // ===== الإجازة الداخلية =====
-  const copyId = document.getElementById('vac_copyId').value.trim();
-  const duration = parseInt(document.getElementById('vac_duration').value) || 0;
-  const balance = parseInt(document.getElementById('vac_balance').value) || 0;
+  // ===== الإجازة الداخلية (فني/مشرف/مكافأة قيادية/إجازة متميز الأسبوع/إجازة تاجر) =====
+  const copyId = (document.getElementById('vac_copyId').value || '').trim();
+  const duration = parseInt(document.getElementById('vac_duration').value, 10) || 0;
+  const balanceRaw = (document.getElementById('vac_balance').value || '').trim();
 
-  if(!copyId || duration <= 0 || balance <= 0){
-    alert("⚠️ يرجى إدخال الكوبي ايدي والمدة والرصد المتبقي بشكل صحيح"); return;
+  if(!copyId || duration <= 0){
+    alert("⚠️ يرجى إدخال الكوبي ايدي والمدة بشكل صحيح"); return;
+  }
+
+  const isLeadershipReward = (type === 'مكافأة قيادية');
+  if(isLeadershipReward){
+    if(!balanceRaw){ alert("⚠️ يرجى إدخال كوبي يوزر آيدي القيادة"); return; }
+    if(!(document.getElementById('vac_leadHeader').value)){ alert('⚠️ يرجى اختيار المخاطَب (المشرف المحترم أو الفني المحترم)'); return; }
+  } else {
+    const balance = parseInt(balanceRaw,10) || 0;
+    if(balance <= 0){ alert("⚠️ يرجى إدخال الرصيد المتبقي (بالساعات) بشكل صحيح"); return; }
   }
 
   const manual = document.getElementById('vac_manualTime').checked;
-
   let startDate, endDate;
 
   if(manual){
-    // === السلوك القديم (إدخال يدوي) ===
     let startHour = parseInt(document.getElementById('vac_startHour').value) || 0;
     let startMinute = parseInt(document.getElementById('vac_startMinute').value) || 0;
     const period = document.getElementById('vac_startPeriod').value;
@@ -554,7 +562,6 @@ function vac_generateVacation(){
     startDate = new Date(`${yyyy}-${mm}-${dd}T${String(startHour).padStart(2,'0')}:${String(startMinute).padStart(2,'0')}:00`);
     endDate = new Date(startDate); endDate.setHours(endDate.getHours() + duration);
   }else{
-    // === السلوك الجديد (تلقائي +5 دقائق بتوقيت مكة) ===
     const tzNow = new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Riyadh"}));
     startDate = new Date(tzNow.getTime() + 5*60*1000);
     endDate = new Date(startDate.getTime() + duration*60*60*1000);
@@ -567,18 +574,40 @@ function vac_generateVacation(){
     return `${y}/${m}/${d}| ${h}:${min}${per}`;
   }
 
-  const headerText = document.getElementById('vac_vacType').value === "فني" ? "الفني المحترم" : "المشرف المحترم";
+  // عنوان الرسالة
+  let titleLine = 'إجازة داخلية';
+  if(type === 'مكافأة قيادية') titleLine = 'مكافأة قيادية';
+  else if(type === 'إجازة متميز الأسبوع') titleLine = 'إجازة متميز الأسبوع';
+  else if(type === 'إجازة تاجر') titleLine = 'إجازة تاجر';
+
+  // المخاطَب
+  let headerText = 'الفني المحترم';
+  if(type === 'مشرف') headerText = 'المشرف المحترم';
+  if(isLeadershipReward){
+    headerText = document.getElementById('vac_leadHeader').value;
+  }
+
+  // سطر الرصيد (للأنواع العادية فقط)
+  let topBalanceLine = '';
+  if(!isLeadershipReward){
+    const balance = parseInt(balanceRaw, 10) || 0;
+    topBalanceLine = `***\`الرصيد المتبقي :\` ${balance - duration} ساعة***  \n`;
+  }
+
+  // سطر كوبي القيادة (يوضع فوق منشن الرول)
+  let leadershipLine = '';
+  if(isLeadershipReward){
+    leadershipLine = `\n***\`توقيع و اعتماد :\` <@${balanceRaw}>***\n`;
+  }
 
   const result =
-`***\` إجازة داخلية \`*** 
+`***\` ${titleLine} \`*** 
 
 ***\`${headerText} :\`***  <@${copyId}>   
 
 ***\`المــــدة :\` ${duration} ساعة***  
 
-***\`الرصيد المتبقي :\` ${balance - duration} ساعة***  
-
-***من تاريخ ${formatDate(startDate)} ***  
+${topBalanceLine}***من تاريخ ${formatDate(startDate)} ***  
 ***الى تاريخ ${formatDate(endDate)} ***  
 
 ***\`ملاحظة :\`***  
@@ -597,6 +626,8 @@ function vac_generateVacation(){
 ***كذلك في حال تعديت نص الاسبوع ( الثلاثاء ) او كان رصيدك اقل من نص اجماليك سيتم تصفيرك الاسبوع الحالي والقادم***  
 
 ***05/يمنع منعاً باتاً تغيير الاسم داخل المقاطعة حسب [قوانين الاجازات](https://ptb.discord.com/channels/1071933157097615480/1071934713524133918/1416990256070135900) ***
+
+${leadershipLine}
 
 <@&1149742928953086105>`;
   const out = document.getElementById('vac_output');
@@ -772,15 +803,15 @@ function abs_generate(){
   const resultText =
 `***\`  نموذج إستدعاء للفني الذي لم يحضر  \`***
 
-***\`اسم الفني\` <@${copyId}> ***
+***\`اسم الفني : \` <@${copyId}> ***
 
-***\`سبب الاستدعاء \` ${reason} ***
+***\`سبب الاستدعاء : \` ${reason} ***
 
-***\`قيمة المخالفة\` ${Number(penalty).toLocaleString()} ***
+***\`قيمة المخالفة : \` ${Number(penalty).toLocaleString()} ***
 
 ***\` الانذار المستحق ؟ : \` ${warning} *** 
 
-***\`لم تتم مخالفته بسبب\` ${notPunished} ***
+***\`لم تتم مخالفته بسبب :\` ${notPunished} ***
 
 ***الي يجيه الفني يعلمه سبب المخالفة  وينزله المخالفة في روم
 https://ptb.discord.com/channels/1071933157097615480/1071934723858894868 ***  
@@ -793,8 +824,8 @@ https://ptb.discord.com/channels/1071933157097615480/1071934723858894868 ***
 
 /* ---------- EXTERNAL VACATION (إجازة خارجية) ---------- */
 function ext_generate(){
-  const personType = document.getElementById('ext_personType').value; // جديد
-  const headerText = (personType === 'مشرف') ? 'المشرف المحترم' : 'الفني المحترم'; // جديد
+  const personType = document.getElementById('ext_personType').value;
+  const headerText = (personType === 'مشرف') ? 'المشرف المحترم' : 'الفني المحترم';
 
   const copyId = document.getElementById('ext_copyId').value.trim();
   const days = parseInt(document.getElementById('ext_days').value,10);
@@ -885,8 +916,12 @@ function ext_copy(){
   copyToClipboard(out ? out.innerText : "");
 }
 
-/* ---------- default tab ---------- */
-show('vacBox');
+/* ---------- عند التحميل: املأ القوائم وابدأ على تبويب الإجازات ---------- */
+document.addEventListener('DOMContentLoaded', ()=>{
+  populateOptions('vio_panel');
+  populateOptions('abs_panel');
+  show('vacBox');
+});
 </script>
 
 </body>
