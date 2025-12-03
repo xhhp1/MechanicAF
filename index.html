@@ -38,10 +38,12 @@
   .container h2{ margin-top:0; color:var(--gold); }
 
   label{ display:block; margin:10px 0 6px; font-weight:bold; text-align:right; }
-  input[type="text"], input[type="number"], select, textarea{
+  input[type="text"], input[type="number"], input[type="date"], select, textarea{
     width:100%; padding:10px; border-radius:8px; border:1px solid var(--gold);
     background:var(--bg); color:var(--gold); font-size:15px; box-sizing:border-box;
   }
+  textarea{ resize:vertical; }
+
   .time-group{ display:flex; gap:8px; }
   .time-group input, .time-group select{ flex:1; }
 
@@ -74,6 +76,26 @@
   .cd-option:hover{ background: rgba(224,202,81,0.06); }
   .cd-option.selected{ background: rgba(224,202,81,0.14); }
 
+  .checkbox-group{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    padding:8px 10px;
+    border-radius:8px;
+    border:1px solid rgba(224,202,81,0.5);
+    background:rgba(0,0,0,0.35);
+  }
+  .checkbox-group label{
+    margin:0;
+    font-weight:normal;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+  .checkbox-group input[type="checkbox"]{
+    width:auto;
+  }
+
   @media (max-width:720px){
     .menu button{ padding:14px 18px; font-size:18px; min-width:140px; }
     .cd-panel{ max-height:260px; }
@@ -85,22 +107,23 @@
 <h1>📋 الشؤون الإدارية📋</h1>
 
 <div class="menu">
-  <button onclick="show('vacBox')">الإجازات و الانتدابات</button>
+  <button onclick="show('vacBox')">الإجازات</button>
+  <button onclick="show('secBox')">الانتدابات</button>
   <button onclick="show('resignBox')">الاستقالة</button>
   <button onclick="show('violBox')">المخالفات</button>
   <button onclick="show('absBox')">فني لم يحضر</button>
   <button onclick="show('extBox')">إجازة خارجية</button>
+  <button onclick="show('roleBox')">طلب رول</button>
 </div>
 
-<!-- ================= VACATION (إجازات + الانتدابات) ================= -->
+<!-- ================= VACATION (إجازات فقط) ================= -->
 <div id="vacBox" class="container">
-  <h2>🧳 الإجازات و الانتدابات 🧳</h2>
+  <h2>🧳 الإجازات الداخلية 🧳</h2>
 
   <label>الإجازة لمن؟</label>
   <select id="vac_vacType" onchange="vac_toggleFields()">
     <option value="فني">فني</option>
     <option value="مشرف">مشرف</option>
-    <option value="الانتدابات">الانتدابات</option> <!-- تحت مشرف -->
     <option value="مكافأة قيادية">مكافأة قيادية</option>
     <option value="إجازة متميز الأسبوع">إجازة متميز الأسبوع</option>
     <option value="إجازة تاجر">إجازة تاجر</option>
@@ -143,35 +166,44 @@
     </div>
   </div>
 
-  <!-- ===== حقول الانتدابات ===== -->
-  <div id="vac_secondmentFields" style="display:none">
-    <label>الكوبي ايدي</label>
-    <input type="number" id="sec_copyId" placeholder="أدخل الكوبي ايدي">
-
-    <label>اسم المنتدب و كوده</label>
-    <input type="text" id="sec_nameCode" placeholder="اكتب الاسم والكود">
-
-    <label>القطاع المنتدب له</label>
-    <select id="sec_sector">
-      <option value="">اختر القطاع</option>
-      <option>آمن الطرق</option>
-      <option>آمن المنشآت</option>
-      <option>حرس الحدود</option>
-      <option>الهلال الأحمر</option>
-      <option>آمن عام</option>
-      <option>قوات الطؤارئ</option>
-    </select>
-
-    <label>المدة (بالأيام)</label>
-    <input type="number" id="sec_days" placeholder="عدد الأيام">
-  </div>
-
   <div class="button-row">
     <button class="btn" onclick="vac_generateVacation()">إنشاء الإجازة</button>
     <button class="btn" onclick="vac_copyResult()">📋 نسخ النتيجة</button>
   </div>
 
   <div id="vac_output" class="output"></div>
+</div>
+
+<!-- ================= SECONDMENT (الانتدابات) ================= -->
+<div id="secBox" class="container">
+  <h2>🧾 نماذج الانتدابات 🧾</h2>
+
+  <label>الكوبي ايدي</label>
+  <input type="number" id="sec_copyId" placeholder="أدخل الكوبي ايدي">
+
+  <label>اسم المنتدب و كوده</label>
+  <input type="text" id="sec_nameCode" placeholder="اكتب الاسم والكود">
+
+  <label>القطاع المنتدب له</label>
+  <select id="sec_sector">
+    <option value="">اختر القطاع</option>
+    <option>آمن الطرق</option>
+    <option>آمن المنشآت</option>
+    <option>حرس الحدود</option>
+    <option>الهلال الأحمر</option>
+    <option>آمن عام</option>
+    <option>قوات الطؤارئ</option>
+  </select>
+
+  <label>المدة (بالأيام)</label>
+  <input type="number" id="sec_days" placeholder="عدد الأيام">
+
+  <div class="button-row">
+    <button class="btn" onclick="sec_generate()">إنشاء الانتداب</button>
+    <button class="btn" onclick="sec_copy()">📋 نسخ النتيجة</button>
+  </div>
+
+  <div id="sec_output" class="output"></div>
 </div>
 
 <!-- ================= RESIGNATION (الاستقالة) ================= -->
@@ -297,6 +329,13 @@
 <div id="extBox" class="container">
   <h2>✈️نموذج إجازة خارجية✈️</h2>
 
+  <label>نوع المعاملة</label>
+  <select id="ext_mode" onchange="ext_toggleMode()">
+    <option value="main">إجازة خارجية</option>
+    <option value="record_leave">سجلات الموظفين - إجازة خارجية</option>
+    <option value="record_break">سجلات الموظفين - كسر الاجازة الخارجية</option>
+  </select>
+
   <label>الاجازة لمن؟</label>
   <select id="ext_personType">
     <option value="فني">فني</option>
@@ -306,15 +345,69 @@
   <label>الكوبي ايدي</label>
   <input type="number" id="ext_copyId" placeholder="أدخل الكوبي ايدي">
 
-  <label>مدة الاجاز بالايام</label>
-  <input type="number" id="ext_days" placeholder="عدد الأيام">
+  <!-- الحقول الأساسية للإجازة الخارجية (النموذج الأصلي) -->
+  <div id="ext_mainFields">
+    <label>مدة الاجازة (بالأيام)</label>
+    <input type="number" id="ext_days" placeholder="عدد الأيام">
+  </div>
+
+  <!-- سجلات الموظفين - إجازة خارجية -->
+  <div id="ext_recordLeaveFields" style="display:none">
+    <label>مدة الاجازة (بالأيام)</label>
+    <input type="number" id="ext_rec_days" placeholder="عدد الأيام">
+
+    <label>تاريخ بدء الاجازة</label>
+    <input type="date" id="ext_rec_start">
+
+    <label>تاريخ انتهاء الاجازة (يُحسب تلقائياً)</label>
+    <input type="text" id="ext_rec_end" placeholder="يتم حسابه من تاريخ البدء + المدة" readonly>
+
+    <label>رابط الاجازة</label>
+    <input type="text" id="ext_rec_link" placeholder="ضع رابط الاجازة هنا">
+  </div>
+
+  <!-- سجلات الموظفين - كسر الاجازة الخارجية -->
+  <div id="ext_breakFields" style="display:none">
+    <label>تاريخ كسر/رجوع من الاجازة</label>
+    <input type="date" id="ext_break_date">
+
+    <label>رابط الاجازة</label>
+    <input type="text" id="ext_break_link" placeholder="ضع رابط الاجازة هنا">
+  </div>
 
   <div class="button-row">
-    <button class="btn" onclick="ext_generate()">إنشاء الإجازة الخارجية</button>
+    <button class="btn" onclick="ext_generate()">إنشاء</button>
     <button class="btn" onclick="ext_copy()">نسخ</button>
   </div>
 
   <div id="ext_output" class="output"></div>
+</div>
+
+<!-- ================= ROLE REQUEST (طلب رول) ================= -->
+<div id="roleBox" class="container">
+  <h2>🧾 طلب رول 🧾</h2>
+
+  <label>الكوبي ايدي</label>
+  <input type="number" id="role_copyId" placeholder="أدخل الكوبي ايدي">
+
+  <label>نوع الطلب</label>
+  <div class="checkbox-group" id="role_requests">
+    <label><input type="checkbox" value="ازالة الاسم"> ازالة الاسم</label>
+    <label><input type="checkbox" value="ازاله رولات الميكانيك"> ازاله رولات الميكانيك</label>
+    <label><input type="checkbox" value="منع توظيف 14 يوم"> منع توظيف 14 يوم</label>
+    <label><input type="checkbox" value="إعطاء رول اجازه وظيفية"> إعطاء رول اجازه وظيفية</label>
+    <label><input type="checkbox" value="ازالة رول اجازة خارجية"> ازالة رول اجازة خارجية</label>
+  </div>
+
+  <label>السبب</label>
+  <input type="text" id="role_reason" placeholder="يتم كتابة السبب هنا مثال (استقاله برتبة متدرب)">
+
+  <div class="button-row">
+    <button class="btn" onclick="role_generate()">إنشاء الطلب</button>
+    <button class="btn" onclick="role_copy()">نسخ</button>
+  </div>
+
+  <div id="role_output" class="output"></div>
 </div>
 
 <script>
@@ -442,20 +535,10 @@ document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeAl
 /* ---------- VACATION: toggle ---------- */
 function vac_toggleFields(){
   const type = document.getElementById('vac_vacType').value;
-  const internal = document.getElementById('vac_internalFields');
-  const secondment = document.getElementById('vac_secondmentFields');
   const balanceLabel = document.getElementById('vac_balanceLabel');
   const balanceInput = document.getElementById('vac_balance');
   const leadHeaderBox = document.getElementById('vac_leadHeaderBox');
   const leadHeaderSel = document.getElementById('vac_leadHeader');
-
-  if(type === 'الانتدابات'){
-    internal.style.display='none';
-    secondment.style.display='block';
-  } else {
-    internal.style.display='block';
-    secondment.style.display='none';
-  }
 
   // مكافأة قيادية: إظهار المخاطَب وتبديل حقل الرصيد
   if(type === 'مكافأة قيادية'){
@@ -485,44 +568,10 @@ function vio_toggleByLevel(){
 }
 vio_toggleByLevel();
 
-/* ---------- VACATION (internal + secondment) ---------- */
+/* ---------- VACATION (internal) ---------- */
 function vac_generateVacation(){
   const type = document.getElementById('vac_vacType').value;
 
-  if(type === 'الانتدابات'){
-    const copyId = (document.getElementById('sec_copyId').value || '').trim();
-    const nameCode = (document.getElementById('sec_nameCode').value || '').trim();
-    const sector = document.getElementById('sec_sector').value;
-    const days = (document.getElementById('sec_days').value || '').trim();
-
-    if(!copyId || !nameCode || !sector || !days){
-      alert("⚠️ يرجى تعبئة جميع حقول الانتدابات: الكوبي ايدي، اسم المنتدب وكوده، القطاع المنتدب له، المدة");
-      return;
-    }
-
-    const result =
-`*** ▬▬▬ ﷽ ▬▬
-\`\`\`الموضوع : انتداب خارجي \`\`\`
-السلام عليكم ورحمة الله وبركاته، وبعد:
- \`\`\`cs
-# إشارة إلى طلب الموظف الموضحة بياناته أدناه بشأن الانتداب خارج الكراج، نفيدكم بأنه تمت الموافقة على طلبه وفق التفاصيل التالية:
-\`\`\`
-
- الاسم: <@${copyId}>
- اسم وكود الموظف : ${nameCode}
- القطاع المنتدب له: ${sector}
- المدة: ${days} يوم
-
-نرجوا من الموظف التقيد بالأنظمة والتعليمات الخاصة بالانتدابات، والتنسيق مع الجهة المعنية قبل المباشرة.
-
-
-<@&1149742928953086105> ***`;
-    const out = document.getElementById('vac_output');
-    out.innerText = result; out.style.display='block';
-    return;
-  }
-
-  // ===== الإجازة الداخلية (فني/مشرف/مكافأة قيادية/إجازة متميز الأسبوع/إجازة تاجر) =====
   const copyId = (document.getElementById('vac_copyId').value || '').trim();
   const duration = parseInt(document.getElementById('vac_duration').value, 10) || 0;
   const balanceRaw = (document.getElementById('vac_balance').value || '').trim();
@@ -635,6 +684,39 @@ ${leadershipLine}
   out.innerText = result; out.style.display='block';
 }
 
+/* ---------- SECONDMENT (الانتدابات) ---------- */
+function sec_generate(){
+  const copyId = (document.getElementById('sec_copyId').value || '').trim();
+  const nameCode = (document.getElementById('sec_nameCode').value || '').trim();
+  const sector = document.getElementById('sec_sector').value;
+  const days = (document.getElementById('sec_days').value || '').trim();
+
+  if(!copyId || !nameCode || !sector || !days){
+    alert("⚠️ يرجى تعبئة جميع حقول الانتدابات: الكوبي ايدي، اسم المنتدب وكوده، القطاع المنتدب له، المدة");
+    return;
+  }
+
+  const result =
+`*** ▬▬▬ ﷽ ▬▬
+\`\`\`الموضوع : انتداب خارجي \`\`\`
+السلام عليكم ورحمة الله وبركاته، وبعد:
+ \`\`\`cs
+# إشارة إلى طلب الموظف الموضحة بياناته أدناه بشأن الانتداب خارج الكراج، نفيدكم بأنه تمت الموافقة على طلبه وفق التفاصيل التالية:
+\`\`\`
+
+ الاسم: <@${copyId}>
+ اسم وكود الموظف : ${nameCode}
+ القطاع المنتدب له: ${sector}
+ المدة: ${days} يوم
+
+نرجوا من الموظف التقيد بالأنظمة والتعليمات الخاصة بالانتدابات، والتنسيق مع الجهة المعنية قبل المباشرة.
+
+
+<@&1149742928953086105> ***`;
+  const out = document.getElementById('sec_output');
+  out.innerText = result; out.style.display='block';
+}
+
 /* ---------- RESIGNATION ---------- */
 function res_toggleLevel(){
   const t = document.getElementById('res_type').value;
@@ -701,7 +783,7 @@ ${nameCode}
 -الموضوع : قرار انهاء خدمات
 \`\`\`
 \`\`\`cs
-# بعد الاطلاع على نظام التوظيف والترقيات وانهاء الخدمة الصادر من ادارة الكراج قررنا مايلي 
+# بعد الاطلاع على نظام التوظيف والترقيات وانهاء الخدمة الصدر من ادارة الكراج قررنا مايلي 
  
 اولاً: تنهى خدمات الفني ادناه اعتبارا من تاريخه\`\`\`
 
@@ -810,7 +892,7 @@ function abs_generate(){
 
 ***\`قيمة المخالفة : \` ${Number(penalty).toLocaleString()} ***
 
-***\` الانذار المستحق ؟ : \` ${warning} *** 
+***\` الانذار المستحق ؟ :\` ${warning} *** 
 
 ***\`لم تتم مخالفته بسبب :\` ${notPunished} ***
 
@@ -824,21 +906,100 @@ https://ptb.discord.com/channels/1071933157097615480/1071934723858894868 ***
 }
 
 /* ---------- EXTERNAL VACATION (إجازة خارجية) ---------- */
+
+function ext_toggleMode(){
+  const mode = document.getElementById('ext_mode').value;
+  const mainFields = document.getElementById('ext_mainFields');
+  const recLeave = document.getElementById('ext_recordLeaveFields');
+  const breakFields = document.getElementById('ext_breakFields');
+
+  if(mode === 'main'){
+    mainFields.style.display = 'block';
+    recLeave.style.display = 'none';
+    breakFields.style.display = 'none';
+  } else if(mode === 'record_leave'){
+    mainFields.style.display = 'none';
+    recLeave.style.display = 'block';
+    breakFields.style.display = 'none';
+  } else {
+    mainFields.style.display = 'none';
+    recLeave.style.display = 'none';
+    breakFields.style.display = 'block';
+  }
+}
+
+function formatDateYMD(dateStr){
+  if(!dateStr) return '';
+  // from YYYY-MM-DD to YYYY/MM/DD
+  const parts = dateStr.split('-');
+  if(parts.length !== 3) return dateStr;
+  return `${parts[0]}/${parts[1]}/${parts[2]}`;
+}
+
+/* يحسب قيمة تاريخ الانتهاء بناءً على تاريخ البدء + المدة (أيام) ويرجّع YYYY-MM-DD */
+function calcExtRecordEndValue(startStr, days){
+  if(!startStr || !days || days <= 0) return '';
+  const parts = startStr.split('-');
+  if(parts.length !== 3) return '';
+  const y = parseInt(parts[0],10);
+  const m = parseInt(parts[1],10)-1;
+  const d = parseInt(parts[2],10);
+  if(isNaN(y) || isNaN(m) || isNaN(d)) return '';
+  const date = new Date(y, m, d);
+  date.setDate(date.getDate() + days);
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth()+1).padStart(2,'0');
+  const dd = String(date.getDate()).padStart(2,'0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+/* يحدّث حقل تاريخ الانتهاء تلقائياً لما تتغير المدة أو تاريخ البدء */
+function calcExtRecordEnd(){
+  const days = parseInt(document.getElementById('ext_rec_days').value,10);
+  const startStr = document.getElementById('ext_rec_start').value;
+  const endInput = document.getElementById('ext_rec_end');
+  const val = calcExtRecordEndValue(startStr, days);
+  endInput.value = val || '';
+}
+
+/* يملأ تاريخ اليوم تلقائياً عند أول تركيز على حقل تاريخ */
+function autoTodayOnFocus(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.addEventListener('focus', ()=>{
+    if(el.value) return;
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth()+1).padStart(2,'0');
+    const dd = String(now.getDate()).padStart(2,'0');
+    el.value = `${yyyy}-${mm}-${dd}`;
+  });
+}
+
 function ext_generate(){
+  const mode = document.getElementById('ext_mode').value;
   const personType = document.getElementById('ext_personType').value;
   const headerText = (personType === 'مشرف') ? 'المشرف المحترم' : 'الفني المحترم';
+  const roleWord = (personType === 'مشرف') ? 'المشرف' : 'الفني';
+  const copyId = (document.getElementById('ext_copyId').value || '').trim();
 
-  const copyId = document.getElementById('ext_copyId').value.trim();
-  const days = parseInt(document.getElementById('ext_days').value,10);
-  if(!copyId || !days || days <= 0){ alert("⚠️ يرجى إدخال الكوبي ايدي والمدة بالأيام صحيحة"); return; }
+  if(!copyId){
+    alert("⚠️ يرجى إدخال الكوبي ايدي"); 
+    return;
+  }
 
-  let tzDate = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Riyadh" }));
-  let startDate = new Date(tzDate.getFullYear(), tzDate.getMonth(), tzDate.getDate());
-  let endDate = new Date(startDate); endDate.setDate(endDate.getDate() + days);
+  // الحالة القديمة: إجازة خارجية كاملة
+  if(mode === 'main'){
+    const days = parseInt(document.getElementById('ext_days').value,10);
+    if(!days || days <= 0){ alert("⚠️ يرجى إدخال المدة بالأيام بشكل صحيح"); return; }
 
-  function fmtYMD(d){ let y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0'); return `${y}/${m}/${day}`; }
+    let tzDate = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Riyadh" }));
+    let startDate = new Date(tzDate.getFullYear(), tzDate.getMonth(), tzDate.getDate());
+    let endDate = new Date(startDate); endDate.setDate(endDate.getDate() + days);
 
-  const result =
+    function fmtYMD(d){ let y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0'); return `${y}/${m}/${day}`; }
+
+    const result =
 `***\`  إجازة خارجية  \`***  
 
 ***\`${headerText} :\`***    <@${copyId}>         
@@ -859,8 +1020,126 @@ function ext_generate(){
 ***02/ في حال انتهاء الاجازة او اردت قطعها يجب فتح تكت اجازة وطلب قطعها او انهائها ويمنع المباشرة حتى ازالة رول اجازة وظيفية***
  
 <@&1149742928953086105>`;
-  const out = document.getElementById('ext_output');
-  out.innerText = result; out.style.display='block';
+    const out = document.getElementById('ext_output');
+    out.innerText = result; out.style.display='block';
+    return;
+  }
+
+  // سجلات الموظفين - إجازة خارجية
+  if(mode === 'record_leave'){
+    const days = parseInt(document.getElementById('ext_rec_days').value,10);
+    const start = document.getElementById('ext_rec_start').value;
+    const link = (document.getElementById('ext_rec_link').value || '').trim();
+
+    if(!days || days <= 0){
+      alert("⚠️ يرجى إدخال مدة الاجازة بشكل صحيح"); return;
+    }
+    if(!start){
+      alert("⚠️ يرجى إدخال تاريخ بدء الاجازة"); return;
+    }
+    if(!link){
+      alert("⚠️ يرجى إدخال رابط الاجازة"); return;
+    }
+
+    // حساب تاريخ الانتهاء تلقائياً
+    const endStr = calcExtRecordEndValue(start, days);
+    if(!endStr){
+      alert("⚠️ تعذر حساب تاريخ انتهاء الاجازة، تأكد من صحة تاريخ البدء والمدة"); 
+      return;
+    }
+    // تحديث الحقل حتى يشوفه المستخدم
+    const endInput = document.getElementById('ext_rec_end');
+    endInput.value = endStr;
+
+    const startText = formatDateYMD(start);
+    const endText = formatDateYMD(endStr);
+
+    const result =
+`***\`نموذج الاجازة الخارجية \`***
+
+***\`اسم ${roleWord}  :\`  ( <@${copyId}> ) ***
+
+***\`مدة الاجازة : \` ( ${days} يوم ) ***
+
+***\`تاريخ بدء الاجازة :\` ( ${startText} ) *** 
+
+***\`تاريخ انتهاء الاجازة  :\` ( ${endText} ) *** 
+
+***\`نسخة للقرار :\` ( ${link} ) ***
+
+***\`للعلم والاحاطة/\`***
+<@1059976190988910772> & <@818887908265033728>`;
+    const out = document.getElementById('ext_output');
+    out.innerText = result; out.style.display='block';
+    return;
+  }
+
+  // سجلات الموظفين - كسر / رجوع من الاجازة الخارجية
+  if(mode === 'record_break'){
+    const breakDate = document.getElementById('ext_break_date').value;
+    const link = (document.getElementById('ext_break_link').value || '').trim();
+
+    if(!breakDate){
+      alert("⚠️ يرجى إدخال تاريخ كسر/رجوع من الاجازة"); return;
+    }
+    if(!link){
+      alert("⚠️ يرجى إدخال رابط الاجازة"); return;
+    }
+
+    const breakText = formatDateYMD(breakDate);
+
+    const result =
+`***\`نموذج كسر / رجوع من الاجازة الخارجية \`***
+
+***\`اسم ${roleWord}  :\` ( <@${copyId}> ) ***
+
+***\`تاريخ كسر/رجوع من الاجازة :\` ( ${breakText} ) ***
+
+***\`نسخة للقرار :\` ( ${link} ) ***
+
+***\`للعلم والاحاطة/\`***
+<@1059976190988910772> & <@792640279684710412> & <@1069596605080162397>`;
+    const out = document.getElementById('ext_output');
+    out.innerText = result; out.style.display='block';
+    return;
+  }
+}
+
+/* ---------- ROLE REQUEST (طلب رول) ---------- */
+function role_generate(){
+  const copyId = (document.getElementById('role_copyId').value || '').trim();
+  const reason = (document.getElementById('role_reason').value || '').trim();
+  const checks = document.querySelectorAll('#role_requests input[type="checkbox"]:checked');
+
+  if(!copyId){
+    alert("⚠️ يرجى إدخال الكوبي ايدي"); return;
+  }
+  if(checks.length === 0){
+    alert("⚠️ يرجى اختيار نوع الطلب واحد على الأقل"); return;
+  }
+  if(!reason){
+    alert("⚠️ يرجى كتابة السبب"); return;
+  }
+
+  const types = Array.from(checks).map(c=>c.value).join(" , ");
+
+  const result =
+`***السلام عليكم ورحمة الله وبركاته ,,***
+
+***\`القيادة الموقرة نطلب منكم للفني : \` ( <@${copyId}> ) ***
+
+ ***نوع الطلب : ( ${types} ) ***
+
+***\`وذلك بسبب :\` ( ${reason} ) ***
+
+للعلم مع التحية /
+<@&1071933343123386429> 
+<@&1092120226478428200> 
+<@&1092120390324731994>***`;
+
+  const out = document.getElementById('role_output');
+  out.innerText = result;
+  out.style.display = 'block';
 }
 
 /* ===================== COPY HELPERS (FIX) ===================== */
@@ -916,17 +1195,35 @@ function ext_copy(){
   const out = document.getElementById('ext_output');
   copyToClipboard(out ? out.innerText : "");
 }
+function sec_copy(){
+  const out = document.getElementById('sec_output');
+  copyToClipboard(out ? out.innerText : "");
+}
+function role_copy(){
+  const out = document.getElementById('role_output');
+  copyToClipboard(out ? out.innerText : "");
+}
 
 /* ---------- عند التحميل: املأ القوائم وابدأ على تبويب الإجازات ---------- */
 document.addEventListener('DOMContentLoaded', ()=>{
   populateOptions('vio_panel');
   populateOptions('abs_panel');
   show('vacBox');
+  ext_toggleMode();
+
+  // ربط حساب تاريخ الانتهاء عند تغيير المدة أو تاريخ البدء
+  const recDaysInput = document.getElementById('ext_rec_days');
+  const recStartInput = document.getElementById('ext_rec_start');
+  if(recDaysInput) recDaysInput.addEventListener('input', calcExtRecordEnd);
+  if(recStartInput) recStartInput.addEventListener('change', calcExtRecordEnd);
+
+  // تعبئة تاريخ اليوم تلقائياً عند الضغط على حقول التاريخ
+  autoTodayOnFocus('ext_rec_start');
+  autoTodayOnFocus('ext_break_date');
 });
 </script>
 
 </body>
 </html>
-
 
 
