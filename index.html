@@ -114,6 +114,8 @@
   <button onclick="show('absBox')">فني لم يحضر</button>
   <button onclick="show('extBox')">إجازة خارجية</button>
   <button onclick="show('roleBox')">طلب رول</button>
+  <!-- ✅ NEW TAB BUTTON -->
+  <button onclick="show('ticketBox')">نماذج التكات</button>
 </div>
 
 <!-- ================= VACATION (إجازات فقط) ================= -->
@@ -129,10 +131,8 @@
     <option value="إجازة تاجر">إجازة تاجر</option>
   </select>
 
-  <!-- ===== حقول الإجازة الداخلية ===== -->
   <div id="vac_internalFields">
 
-    <!-- يظهر فقط عند مكافأة قيادية (ومكانه فوق الكوبي ايدي) -->
     <div id="vac_leadHeaderBox" style="display:none">
       <label>المخاطَب في الرسالة</label>
       <select id="vac_leadHeader">
@@ -148,7 +148,6 @@
     <label>المــــدة (بالساعات)</label>
     <input type="number" id="vac_duration" placeholder="عدد الساعات">
 
-    <!-- يتحول هذا الحقل إلى كوبي القيادة عند اختيار "مكافأة قيادية" -->
     <label id="vac_balanceLabel">الرصيد المتبقي (بالساعات)</label>
     <input type="number" id="vac_balance" placeholder="عدد الساعات">
 
@@ -269,9 +268,7 @@
       <span class="placeholder">اختر المخالفة</span>
       <span>&#9662;</span>
     </div>
-    <div class="cd-panel" id="vio_panel" role="listbox" aria-hidden="true">
-      <!-- يتم البناء ديناميكيًا من Array في الأسفل -->
-    </div>
+    <div class="cd-panel" id="vio_panel" role="listbox" aria-hidden="true"></div>
   </div>
   <input type="hidden" id="vio_selected" value="">
 
@@ -296,9 +293,7 @@
       <span class="placeholder">اختر السبب</span>
       <span>&#9662;</span>
     </div>
-    <div class="cd-panel" id="abs_panel" role="listbox" aria-hidden="true">
-      <!-- يتم البناء ديناميكيًا من Array في الأسفل -->
-    </div>
+    <div class="cd-panel" id="abs_panel" role="listbox" aria-hidden="true"></div>
   </div>
   <input type="hidden" id="abs_selected" value="">
 
@@ -345,13 +340,11 @@
   <label>الكوبي ايدي</label>
   <input type="number" id="ext_copyId" placeholder="أدخل الكوبي ايدي">
 
-  <!-- الحقول الأساسية للإجازة الخارجية (النموذج الأصلي) -->
   <div id="ext_mainFields">
     <label>مدة الاجازة (بالأيام)</label>
     <input type="number" id="ext_days" placeholder="عدد الأيام">
   </div>
 
-  <!-- سجلات الموظفين - إجازة خارجية -->
   <div id="ext_recordLeaveFields" style="display:none">
     <label>مدة الاجازة (بالأيام)</label>
     <input type="number" id="ext_rec_days" placeholder="عدد الأيام">
@@ -366,7 +359,6 @@
     <input type="text" id="ext_rec_link" placeholder="ضع رابط الاجازة هنا">
   </div>
 
-  <!-- سجلات الموظفين - كسر الاجازة الخارجية -->
   <div id="ext_breakFields" style="display:none">
     <label>تاريخ كسر/رجوع من الاجازة</label>
     <input type="date" id="ext_break_date">
@@ -408,6 +400,47 @@
   </div>
 
   <div id="role_output" class="output"></div>
+</div>
+
+<!-- ================= NEW: TICKET TEMPLATES (نماذج التكات) ================= -->
+<div id="ticketBox" class="container">
+  <h2>🎫 نماذج التكات 🎫</h2>
+
+  <label>اختر النموذج</label>
+  <select id="ticket_type" onchange="ticket_toggleFields()">
+    <option value="">اختر نموذج</option>
+    <option value="accept_vac">نموذج قبول الاجازة</option>
+    <option value="vac_form">نموذج الاجازة</option>
+    <option value="resign_form">نموذج الاستقالة</option>
+    <option value="promo_form">نموذج الترقيات</option>
+  </select>
+
+  <!-- يظهر فقط لنموذج الترقيات -->
+  <div id="ticket_promoFields" style="display:none">
+    <label>عدد التقارير</label>
+    <input type="number" id="ticket_reports" placeholder="اكتب عدد التقارير">
+
+    <label>عدد الساعات</label>
+    <input type="number" id="ticket_hours" placeholder="اكتب عدد الساعات">
+
+    <label>استحقاق الترقية</label>
+    <select id="ticket_eligibility" onchange="ticket_toggleReason()">
+      <option value="مستحق">مستحق</option>
+      <option value="غير مستحق">غير مستحق</option>
+    </select>
+
+    <div id="ticket_reasonBox" style="display:none">
+      <label>السبب</label>
+      <input type="text" id="ticket_reason" placeholder="اكتب السبب هنا">
+    </div>
+  </div>
+
+  <div class="button-row">
+    <button class="btn" onclick="ticket_generate()">إنشاء</button>
+    <button class="btn" onclick="ticket_copy()">نسخ</button>
+  </div>
+
+  <div id="ticket_output" class="output"></div>
 </div>
 
 <script>
@@ -469,7 +502,6 @@ const VIOLATIONS = [
   "عدم دخول الموجة"
 ];
 
-/* يبني عناصر القائمة لوجهتي المخالفات/الاستدعاء */
 function populateOptions(panelId){
   const panel = document.getElementById(panelId);
   if(!panel) return;
@@ -504,7 +536,6 @@ function closeAllDropdowns(){
   document.querySelectorAll('.cd-panel').forEach(p=>{ p.style.display='none'; p.setAttribute('aria-hidden','true'); });
 }
 
-/* التقاط اختيار العنصر للدروبدونات المخصصة */
 document.addEventListener('click', function(e){
   if(e.target.closest('#vio_panel') && e.target.classList.contains('cd-option')){
     const val = e.target.innerText.trim();
@@ -540,7 +571,6 @@ function vac_toggleFields(){
   const leadHeaderBox = document.getElementById('vac_leadHeaderBox');
   const leadHeaderSel = document.getElementById('vac_leadHeader');
 
-  // مكافأة قيادية: إظهار المخاطَب وتبديل حقل الرصيد
   if(type === 'مكافأة قيادية'){
     balanceLabel.textContent = 'توقيع و اعتماد : ';
     balanceInput.value = '';
@@ -554,7 +584,6 @@ function vac_toggleFields(){
   }
 }
 
-/* إظهار/إخفاء إدخال الوقت اليدوي */
 function vac_toggleManualTime(){
   const manual = document.getElementById('vac_manualTime').checked;
   document.getElementById('vac_timeRow').style.display = manual ? 'flex' : 'none';
@@ -603,7 +632,7 @@ function vac_generateVacation(){
     if(period === "م" && startHour < 12) startHour += 12;
     if(period === "ص" && startHour === 12) startHour = 0;
 
-    let tzDate = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Riyadh" })); 
+    let tzDate = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Riyadh" }));
     let yyyy = tzDate.getFullYear();
     let mm = String(tzDate.getMonth()+1).padStart(2,'0');
     let dd = String(tzDate.getDate()).padStart(2,'0');
@@ -623,27 +652,23 @@ function vac_generateVacation(){
     return `${y}/${m}/${d}| ${h}:${min}${per}`;
   }
 
-  // عنوان الرسالة
   let titleLine = 'إجازة داخلية';
   if(type === 'مكافأة قيادية') titleLine = 'مكافأة قيادية';
   else if(type === 'إجازة متميز الأسبوع') titleLine = 'إجازة متميز الأسبوع';
   else if(type === 'إجازة تاجر') titleLine = 'إجازة تاجر';
 
-  // المخاطَب
   let headerText = 'الفني المحترم';
   if(type === 'مشرف') headerText = 'المشرف المحترم';
   if(isLeadershipReward){
     headerText = document.getElementById('vac_leadHeader').value;
   }
 
-  // سطر الرصيد (للأنواع العادية فقط)
   let topBalanceLine = '';
   if(!isLeadershipReward){
     const balance = parseInt(balanceRaw, 10) || 0;
     topBalanceLine = `***\`الرصيد المتبقي :\` ${balance - duration} ساعة***  \n`;
   }
 
-  // سطر كوبي القيادة (يوضع فوق منشن الرول)
   let leadershipLine = '';
   if(isLeadershipReward){
     leadershipLine = `\n***\`توقيع و اعتماد :\` <@${balanceRaw}>***\n`;
@@ -710,7 +735,6 @@ function sec_generate(){
  المدة: ${days} يوم
 
 نرجوا من الموظف التقيد بالأنظمة والتعليمات الخاصة بالانتدابات، والتنسيق مع الجهة المعنية قبل المباشرة.
-
 
 <@&1149742928953086105> ***`;
   const out = document.getElementById('sec_output');
@@ -832,7 +856,6 @@ function vio_generate(){
 
 \`\`\`وذلك بسبب :  ${violation}\`\`\`
 
-
 \`اعتماد:\` <@${supervisorId}>`;
     const out = document.getElementById('vio_output');
     out.innerText = resultShafahi; out.style.display='block';
@@ -906,7 +929,6 @@ https://ptb.discord.com/channels/1071933157097615480/1071934723858894868 ***
 }
 
 /* ---------- EXTERNAL VACATION (إجازة خارجية) ---------- */
-
 function ext_toggleMode(){
   const mode = document.getElementById('ext_mode').value;
   const mainFields = document.getElementById('ext_mainFields');
@@ -930,13 +952,11 @@ function ext_toggleMode(){
 
 function formatDateYMD(dateStr){
   if(!dateStr) return '';
-  // from YYYY-MM-DD to YYYY/MM/DD
   const parts = dateStr.split('-');
   if(parts.length !== 3) return dateStr;
   return `${parts[0]}/${parts[1]}/${parts[2]}`;
 }
 
-/* يحسب قيمة تاريخ الانتهاء بناءً على تاريخ البدء + المدة (أيام) ويرجّع YYYY-MM-DD */
 function calcExtRecordEndValue(startStr, days){
   if(!startStr || !days || days <= 0) return '';
   const parts = startStr.split('-');
@@ -953,7 +973,6 @@ function calcExtRecordEndValue(startStr, days){
   return `${yyyy}-${mm}-${dd}`;
 }
 
-/* يحدّث حقل تاريخ الانتهاء تلقائياً لما تتغير المدة أو تاريخ البدء */
 function calcExtRecordEnd(){
   const days = parseInt(document.getElementById('ext_rec_days').value,10);
   const startStr = document.getElementById('ext_rec_start').value;
@@ -962,7 +981,6 @@ function calcExtRecordEnd(){
   endInput.value = val || '';
 }
 
-/* يملأ تاريخ اليوم تلقائياً عند أول تركيز على حقل تاريخ */
 function autoTodayOnFocus(id){
   const el = document.getElementById(id);
   if(!el) return;
@@ -984,11 +1002,10 @@ function ext_generate(){
   const copyId = (document.getElementById('ext_copyId').value || '').trim();
 
   if(!copyId){
-    alert("⚠️ يرجى إدخال الكوبي ايدي"); 
+    alert("⚠️ يرجى إدخال الكوبي ايدي");
     return;
   }
 
-  // الحالة القديمة: إجازة خارجية كاملة
   if(mode === 'main'){
     const days = parseInt(document.getElementById('ext_days').value,10);
     if(!days || days <= 0){ alert("⚠️ يرجى إدخال المدة بالأيام بشكل صحيح"); return; }
@@ -1025,31 +1042,18 @@ function ext_generate(){
     return;
   }
 
-  // سجلات الموظفين - إجازة خارجية
   if(mode === 'record_leave'){
     const days = parseInt(document.getElementById('ext_rec_days').value,10);
     const start = document.getElementById('ext_rec_start').value;
     const link = (document.getElementById('ext_rec_link').value || '').trim();
 
-    if(!days || days <= 0){
-      alert("⚠️ يرجى إدخال مدة الاجازة بشكل صحيح"); return;
-    }
-    if(!start){
-      alert("⚠️ يرجى إدخال تاريخ بدء الاجازة"); return;
-    }
-    if(!link){
-      alert("⚠️ يرجى إدخال رابط الاجازة"); return;
-    }
+    if(!days || days <= 0){ alert("⚠️ يرجى إدخال مدة الاجازة بشكل صحيح"); return; }
+    if(!start){ alert("⚠️ يرجى إدخال تاريخ بدء الاجازة"); return; }
+    if(!link){ alert("⚠️ يرجى إدخال رابط الاجازة"); return; }
 
-    // حساب تاريخ الانتهاء تلقائياً
     const endStr = calcExtRecordEndValue(start, days);
-    if(!endStr){
-      alert("⚠️ تعذر حساب تاريخ انتهاء الاجازة، تأكد من صحة تاريخ البدء والمدة"); 
-      return;
-    }
-    // تحديث الحقل حتى يشوفه المستخدم
-    const endInput = document.getElementById('ext_rec_end');
-    endInput.value = endStr;
+    if(!endStr){ alert("⚠️ تعذر حساب تاريخ انتهاء الاجازة"); return; }
+    document.getElementById('ext_rec_end').value = endStr;
 
     const startText = formatDateYMD(start);
     const endText = formatDateYMD(endStr);
@@ -1074,17 +1078,12 @@ function ext_generate(){
     return;
   }
 
-  // سجلات الموظفين - كسر / رجوع من الاجازة الخارجية
   if(mode === 'record_break'){
     const breakDate = document.getElementById('ext_break_date').value;
     const link = (document.getElementById('ext_break_link').value || '').trim();
 
-    if(!breakDate){
-      alert("⚠️ يرجى إدخال تاريخ كسر/رجوع من الاجازة"); return;
-    }
-    if(!link){
-      alert("⚠️ يرجى إدخال رابط الاجازة"); return;
-    }
+    if(!breakDate){ alert("⚠️ يرجى إدخال تاريخ كسر/رجوع من الاجازة"); return; }
+    if(!link){ alert("⚠️ يرجى إدخال رابط الاجازة"); return; }
 
     const breakText = formatDateYMD(breakDate);
 
@@ -1111,15 +1110,9 @@ function role_generate(){
   const reason = (document.getElementById('role_reason').value || '').trim();
   const checks = document.querySelectorAll('#role_requests input[type="checkbox"]:checked');
 
-  if(!copyId){
-    alert("⚠️ يرجى إدخال الكوبي ايدي"); return;
-  }
-  if(checks.length === 0){
-    alert("⚠️ يرجى اختيار نوع الطلب واحد على الأقل"); return;
-  }
-  if(!reason){
-    alert("⚠️ يرجى كتابة السبب"); return;
-  }
+  if(!copyId){ alert("⚠️ يرجى إدخال الكوبي ايدي"); return; }
+  if(checks.length === 0){ alert("⚠️ يرجى اختيار نوع الطلب واحد على الأقل"); return; }
+  if(!reason){ alert("⚠️ يرجى كتابة السبب"); return; }
 
   const types = Array.from(checks).map(c=>c.value).join(" , ");
 
@@ -1138,6 +1131,119 @@ function role_generate(){
 <@&1092120390324731994>***`;
 
   const out = document.getElementById('role_output');
+  out.innerText = result;
+  out.style.display = 'block';
+}
+
+/* ================= NEW: Ticket Templates logic ================= */
+function ticket_toggleFields(){
+  const t = document.getElementById('ticket_type').value;
+  const promo = document.getElementById('ticket_promoFields');
+  if(promo) promo.style.display = (t === 'promo_form') ? 'block' : 'none';
+  ticket_toggleReason();
+}
+
+function ticket_toggleReason(){
+  const t = document.getElementById('ticket_type').value;
+  const elig = document.getElementById('ticket_eligibility');
+  const box = document.getElementById('ticket_reasonBox');
+  if(!box) return;
+  if(t !== 'promo_form'){ box.style.display = 'none'; return; }
+  box.style.display = (elig && elig.value === 'غير مستحق') ? 'block' : 'none';
+}
+
+function ticket_generate(){
+  const type = document.getElementById('ticket_type').value;
+  const out = document.getElementById('ticket_output');
+  if(!type){ alert("⚠️ اختر نموذج"); return; }
+
+  let result = "";
+
+  if(type === "accept_vac"){
+    result =
+`***  قبول الاجازة تحت هذه الشروط :***
+
+**تم قبول اجازتك نرجوا منك الانتظار لحين انزالها في [صادر الشؤون الادارية](https://discord.com/channels/1071933157097615480/1152470303507755008) . **
+
+\`** نرجوا منك الاتزام بجميع قوانين المقاطعة و قرائة الاتي :**\`
+
+***\`تنويهات هامة يجب قرائتها :\`***  
+
+**01/ تبدأ الإجازة الخاصة بك في وقتها المحدد، ويُمنع تغيير الوظيفة قبل المدة المحددة لبدء الإجازة.**  
+
+**02/ يجب العودة من الإجازة قبل انتهاء مدتها وتغيير الوظيفة إلى قطاع الميكانيك. من يخالف ذلك سيُعتبر تهرباً وظيفياً وستتم محاسبته من قِبل إدارة الكراج.** 
+
+**03/ في حال عندك عذر وقدمته بفتح تكت اجازة سيتم فقط تصفير اجازاتك مهما كان السبب وعدم اعطائك تهرب وظيفي**  
+
+**04/ في حال تم سجنك رقابيا سيتم تطبيق العقوبه عليك حسب [قوانين الاجازات](https://ptb.discord.com/channels/1071933157097615480/1071934713524133918/1416990256070135900) **  
+
+**كذلك في حال تعديت نص الاسبوع ( الثلاثاء ) او كان رصيدك اقل من نص اجماليك سيتم تصفيرك الاسبوع الحالي والقادم**
+
+**05/يمنع منعاً باتاً تغيير الاسم داخل المقاطعة حسب [قوانين الاجازات](https://ptb.discord.com/channels/1071933157097615480/1071934713524133918/1416990256070135900) **`;
+  }
+
+  if(type === "vac_form"){
+    result =
+`> نموذج الاجازات نرجوا منك تعبئته :
+> 
+*نرجو منك تعبئت هذا النموذج لطلب اجازة: *
+
+\`مستواك في الميكانيك\` : **مستوى ....**
+
+\`عدد الساعات المطلوبة \` : **0**
+
+\`رصيدك المتبقي في حال وجوده \`: **0**`;
+  }
+
+  if(type === "resign_form"){
+    result =
+`*حياك الله.*
+
+*- تم قبول استقالتك نتمنى منك اكمال هذا الاستبيان [اضغط هنا](https://forms.cloud.microsoft/r/MRgyvuyWgD).*
+*- في حال كنت مستوى متدرب أو مستوى واحد يتوجب امتلاكك 1 مليون للاستقالة.*
+*- في حال استقالتك سوف تحصل على منع توضيف مدته 14 يوم. *
+*- نرجوا منك التوجه الى روم الكراج في اقرب وقت لاستكمال اجرائات الاستقالة.*
+*[روم الكراج](https://discord.com/channels/1071933157097615480/1202408726925934692)*`;
+  }
+
+  if(type === "promo_form"){
+    const reports = (document.getElementById('ticket_reports').value || '').trim();
+    const hours = (document.getElementById('ticket_hours').value || '').trim();
+    const eligibility = document.getElementById('ticket_eligibility').value;
+    const reason = (document.getElementById('ticket_reason').value || '').trim();
+
+    const reportsVal = reports ? reports : "0";
+    const hoursVal = hours ? hours : "0";
+
+    let reasonLine = "HERE REASON";
+    if(eligibility === "غير مستحق"){
+      reasonLine = reason ? reason : "السبب غير مذكور";
+    } else {
+      reasonLine = "لا يوجد";
+    }
+
+    let reasonsBullets = "";
+    if(eligibility === "غير مستحق"){
+      reasonsBullets =
+`- عدد ساعات أقل من المطلوب .
+- عدد تقارير أقل من المطلوب .
+-  ليس مستوفي عدد الدورات المطلوبة .`;
+    }
+
+    result =
+`* استعلام متطلبات الترقية*
+
+\` التقارير :\` **${reportsVal}**
+
+\`عدد الساعات :\`**${hoursVal}**
+
+\`الدورات المتبقية للترقية :\`**لايوجد**
+
+\`استحقاق الترقية :\`**${eligibility}**
+الاسباب : ${reasonLine}
+${reasonsBullets ? ("\n" + reasonsBullets) : ""}`;
+  }
+
   out.innerText = result;
   out.style.display = 'block';
 }
@@ -1175,49 +1281,28 @@ function copyToClipboard(text){
   }
 }
 
-function vac_copyResult(){
-  const out = document.getElementById('vac_output');
-  copyToClipboard(out ? out.innerText : "");
-}
-function res_copy(){
-  const out = document.getElementById('res_output');
-  copyToClipboard(out ? out.innerText : "");
-}
-function vio_copy(){
-  const out = document.getElementById('vio_output');
-  copyToClipboard(out ? out.innerText : "");
-}
-function abs_copy(){
-  const out = document.getElementById('abs_output');
-  copyToClipboard(out ? out.innerText : "");
-}
-function ext_copy(){
-  const out = document.getElementById('ext_output');
-  copyToClipboard(out ? out.innerText : "");
-}
-function sec_copy(){
-  const out = document.getElementById('sec_output');
-  copyToClipboard(out ? out.innerText : "");
-}
-function role_copy(){
-  const out = document.getElementById('role_output');
-  copyToClipboard(out ? out.innerText : "");
-}
+function vac_copyResult(){ copyToClipboard(document.getElementById('vac_output')?.innerText || ""); }
+function res_copy(){ copyToClipboard(document.getElementById('res_output')?.innerText || ""); }
+function vio_copy(){ copyToClipboard(document.getElementById('vio_output')?.innerText || ""); }
+function abs_copy(){ copyToClipboard(document.getElementById('abs_output')?.innerText || ""); }
+function ext_copy(){ copyToClipboard(document.getElementById('ext_output')?.innerText || ""); }
+function sec_copy(){ copyToClipboard(document.getElementById('sec_output')?.innerText || ""); }
+function role_copy(){ copyToClipboard(document.getElementById('role_output')?.innerText || ""); }
+function ticket_copy(){ copyToClipboard(document.getElementById('ticket_output')?.innerText || ""); }
 
-/* ---------- عند التحميل: املأ القوائم وابدأ على تبويب الإجازات ---------- */
+/* ---------- عند التحميل ---------- */
 document.addEventListener('DOMContentLoaded', ()=>{
   populateOptions('vio_panel');
   populateOptions('abs_panel');
   show('vacBox');
   ext_toggleMode();
+  ticket_toggleFields();
 
-  // ربط حساب تاريخ الانتهاء عند تغيير المدة أو تاريخ البدء
   const recDaysInput = document.getElementById('ext_rec_days');
   const recStartInput = document.getElementById('ext_rec_start');
   if(recDaysInput) recDaysInput.addEventListener('input', calcExtRecordEnd);
   if(recStartInput) recStartInput.addEventListener('change', calcExtRecordEnd);
 
-  // تعبئة تاريخ اليوم تلقائياً عند الضغط على حقول التاريخ
   autoTodayOnFocus('ext_rec_start');
   autoTodayOnFocus('ext_break_date');
 });
@@ -1225,7 +1310,3 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 </body>
 </html>
-
-
-
-
