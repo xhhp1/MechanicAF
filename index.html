@@ -1,143 +1,218 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>💼الشؤون الإدارية💼</title>
+
 <style>
-  :root{
-    --gold:#e0ca51;
-    --bg:#222;
-    --panel-bg: rgba(0,0,0,0.85);
-  }
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family: Tahoma, Arial, sans-serif;
-    background: url("https://raw.githubusercontent.com/xhhp1/mechanics/main/images/mechan.png") no-repeat center center fixed;
-    background-size: cover;
-    color:var(--gold);
-    text-align:center;
-    padding:20px;
-    box-sizing:border-box;
-  }
-  h1{ margin:12px 0 18px; font-size:28px; }
+:root{
+  --menuW: 240px;
 
-  /* ✅ القائمة يمين فوق */
+  /* متغيراتك الأساسية */
+  --gold:#e0ca51;
+  --bg:#222;
+  --panel-bg: rgba(0,0,0,0.85);
+
+  /* ✅ مسافة بين القائمة والمحتوى */
+  --gap: 28px;
+}
+
+html,body{height:100%}
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:Tahoma, Arial, sans-serif;
+  color:var(--gold);
+  text-align:center;
+
+  /* ✅ FIX: الخلفية ما تصير بيضاء لو الصورة تأخرّت/ما تحملت */
+  background-color:#111;
+  background-image: url("https://raw.githubusercontent.com/xhhp1/mechanics/main/images/mechan.png");
+  background-repeat:no-repeat;
+  background-position:center center;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+/* ✅ لف كل المحتوى (غير المينو) عشان التوسيط يصير مضبوط */
+.main{
+  margin-right: calc(var(--menuW) + var(--gap));
+  margin-left: var(--gap);
+  padding: 20px;
+}
+
+/* ✅ القائمة يمين دائماً + عمودية دائماً */
+.menu{
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  left: auto;
+  width: var(--menuW);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 10000;
+  margin: 0;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  padding-right: 2px;
+}
+
+.menu::-webkit-scrollbar{ width: 8px; }
+.menu::-webkit-scrollbar-thumb{
+  background: rgba(224,202,81,0.35);
+  border-radius: 10px;
+}
+
+.menu button{
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+  background: var(--gold);
+  color: #111;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform .12s ease, background .12s ease;
+  text-align: right;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+
+.menu button:hover{
+  background:#c6b142;
+  transform: translateX(-3px);
+}
+
+/* ✅ IMPORTANT: حتى لو الشاشة صغيرة نخلي المينو يمين + عمودي */
+@media (max-width: 900px), (orientation: portrait){
+  :root{ --gap: 14px; }
+
+  .main{
+    margin-right: calc(var(--menuW) + var(--gap));
+    margin-left: var(--gap);
+    padding: 16px;
+  }
+
   .menu{
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    display: flex;
+    top: 10px;
+    right: 10px;
+    width: var(--menuW);
     flex-direction: column;
-    gap: 10px;
-    z-index: 10000;
-    margin: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: transparent;
+    backdrop-filter: none;
+    padding: 0;
+    border-radius: 0;
   }
-
   .menu button{
-    padding: 12px 16px;
-    font-size: 16px;
-    background: var(--gold);
-    color: #111;
-    border: none;
-    border-radius: 10px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: transform .12s ease, background .12s ease;
-    min-width: 210px;
+    min-width: 0;
     text-align: right;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+    transform: none;
   }
+}
 
-  .menu button:hover{
-    background:#c6b142;
-    transform: translateX(-3px);
-  }
+/* ✅ اخفاء كل التابات افتراضياً + توسيط مضبوط */
+.container{
+  display:none;
+  max-width:980px;
+  width: min(980px, 100%);
+  margin: 20px auto;
+  background: var(--panel-bg);
+  border-radius:12px;
+  padding:18px;
+  text-align:right;
+}
 
-  /* ✅ أهم تعديل: اخفاء كل التابات افتراضياً */
-  .container{
-    display:none;
-    max-width:980px;
-    margin: 12px auto;
-    background: var(--panel-bg);
-    border-radius:12px;
-    padding:18px;
-    text-align:right;
-    box-sizing:border-box;
+.container.active{ display:block; }
+.container h2{ margin-top:0; color:var(--gold); }
 
-    /* عشان المحتوى ما يختفي تحت المينيو */
-    margin-top: 90px;
-  }
-  .container.active{ display:block; }
-  .container h2{ margin-top:0; color:var(--gold); }
+label{ display:block; margin:10px 0 6px; font-weight:bold; text-align:right; }
 
-  label{ display:block; margin:10px 0 6px; font-weight:bold; text-align:right; }
-  input[type="text"], input[type="number"], input[type="date"], select, textarea{
-    width:100%; padding:10px; border-radius:8px; border:1px solid var(--gold);
-    background:var(--bg); color:var(--gold); font-size:15px; box-sizing:border-box;
-  }
-  textarea{ resize:vertical; }
+input[type="text"], input[type="number"], input[type="date"], select, textarea{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid var(--gold);
+  background:var(--bg);
+  color:var(--gold);
+  font-size:15px;
+}
 
-  .time-group{ display:flex; gap:8px; }
-  .time-group input, .time-group select{ flex:1; }
+textarea{ resize:vertical; }
 
-  .manual-wrap{ display:flex; align-items:center; gap:8px; margin-top:8px; }
-  .manual-wrap input[type="checkbox"]{ width:auto; }
+.time-group{ display:flex; gap:8px; }
+.time-group input, .time-group select{ flex:1; }
 
-  .button-row{ display:flex; gap:12px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
-  .btn{ padding:12px 22px; background:var(--gold); color:#111; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
-  .btn:hover{ background:#c6b142; }
+.manual-wrap{ display:flex; align-items:center; gap:8px; margin-top:8px; }
+.manual-wrap input[type="checkbox"]{ width:auto; }
 
-  .output{
-    display:none; margin-top:14px; background:#333; padding:14px; border-radius:8px;
-    color:var(--gold); text-align:left; white-space:pre-wrap; direction:ltr;
-    max-width:940px; margin-left:auto; margin-right:auto; box-sizing:border-box;
-  }
+.button-row{ display:flex; gap:12px; justify-content:center; margin-top:14px; flex-wrap:wrap; }
+.btn{ padding:12px 22px; background:var(--gold); color:#111; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
+.btn:hover{ background:#c6b142; }
 
-  .custom-dropdown{ position:relative; user-select:none; }
-  .cd-selected{
-    display:flex; align-items:center; justify-content:space-between; gap:8px;
-    padding:10px; border-radius:8px; border:1px solid var(--gold);
-    background:var(--bg); color:var(--gold); cursor:pointer;
-  }
-  .cd-selected .placeholder{ opacity:0.8; }
-  .cd-panel{
-    position:absolute; z-index:9999; left:0; right:0; top:calc(100% + 6px);
-    background:var(--bg); border:1px solid rgba(224,202,81,0.15); border-radius:8px;
-    box-shadow:0 6px 20px rgba(0,0,0,0.5); max-height:300px; overflow:auto; padding:6px; display:none;
-  }
-  .cd-option{ padding:10px; border-radius:6px; color:var(--gold); cursor:pointer; text-align:right; }
-  .cd-option:hover{ background: rgba(224,202,81,0.06); }
-  .cd-option.selected{ background: rgba(224,202,81,0.14); }
+.output{
+  display:none;
+  margin-top:14px;
+  background:#333;
+  padding:14px;
+  border-radius:8px;
+  color:var(--gold);
+  text-align:left;
+  white-space:pre-wrap;
+  direction:ltr;
+  max-width:940px;
+  margin-left:auto;
+  margin-right:auto;
+}
 
-  .checkbox-group{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
-    padding:8px 10px;
-    border-radius:8px;
-    border:1px solid rgba(224,202,81,0.5);
-    background:rgba(0,0,0,0.35);
-  }
-  .checkbox-group label{
-    margin:0;
-    font-weight:normal;
-    display:flex;
-    align-items:center;
-    gap:6px;
-  }
-  .checkbox-group input[type="checkbox"]{ width:auto; }
+/* custom dropdown */
+.custom-dropdown{ position:relative; user-select:none; }
+.cd-selected{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  padding:10px; border-radius:8px; border:1px solid var(--gold);
+  background:var(--bg); color:var(--gold); cursor:pointer;
+}
+.cd-selected .placeholder{ opacity:0.8; }
+.cd-panel{
+  position:absolute; z-index:9999; left:0; right:0; top:calc(100% + 6px);
+  background:var(--bg); border:1px solid rgba(224,202,81,0.15); border-radius:8px;
+  box-shadow:0 6px 20px rgba(0,0,0,0.5); max-height:300px; overflow:auto; padding:6px; display:none;
+}
+.cd-option{ padding:10px; border-radius:6px; color:var(--gold); cursor:pointer; text-align:right; }
+.cd-option:hover{ background: rgba(224,202,81,0.06); }
+.cd-option.selected{ background: rgba(224,202,81,0.14); }
 
-  @media (max-width:720px){
-    .menu button{ padding:14px 18px; font-size:18px; min-width:140px; }
-    .cd-panel{ max-height:260px; }
-  }
+.checkbox-group{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  padding:8px 10px;
+  border-radius:8px;
+  border:1px solid rgba(224,202,81,0.5);
+  background:rgba(0,0,0,0.35);
+}
+.checkbox-group label{
+  margin:0;
+  font-weight:normal;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.checkbox-group input[type="checkbox"]{ width:auto; }
+
+@media (max-width:720px){
+  .menu button{ padding:14px 18px; font-size:18px; }
+  .cd-panel{ max-height:260px; }
+}
 </style>
 </head>
-<body>
 
-<h1>📋 الشؤون الإدارية📋</h1>
+<body>
 
 <div class="menu">
   <button onclick="show('vacBox')">الإجازات</button>
@@ -150,6 +225,10 @@
   <button onclick="show('roleBox')">طلب رول</button>
   <button onclick="show('ticketBox')">نماذج التكات</button>
 </div>
+
+<div class="main">
+
+<h1>📋 الشؤون الإدارية📋</h1>
 
 <!-- ================= VACATION (إجازات فقط) ================= -->
 <div id="vacBox" class="container">
@@ -175,18 +254,19 @@
     </div>
 
     <label>الكوبي ايدي</label>
-    <input type="number" id="vac_copyId" placeholder="أدخل الكوبي ايدي">
+    <input type="text" inputmode="numeric" id="vac_copyId" placeholder="أدخل الكوبي ايدي">
 
     <label>المــــدة (بالساعات)</label>
     <input type="number" id="vac_duration" placeholder="عدد الساعات">
 
     <label id="vac_balanceLabel">الرصيد المتبقي (بالساعات)</label>
-    <input type="number" id="vac_balance" placeholder="عدد الساعات">
+    <input type="text" inputmode="numeric" id="vac_balance" placeholder="عدد الساعات أو كوبي آيدي القيادة">
 
     <div class="manual-wrap">
       <input type="checkbox" id="vac_manualTime" onchange="vac_toggleManualTime()">
       <label for="vac_manualTime" style="margin:0;font-weight:normal">لإدخال الوقت بشكل يدوي</label>
     </div>
+
     <div id="vac_timeRow" class="time-group" style="display:none">
       <input type="number" id="vac_startHour" placeholder="الساعة (1-12)">
       <input type="number" id="vac_startMinute" placeholder="الدقيقة (0-59)">
@@ -210,7 +290,7 @@
   <h2>🧾 نماذج الانتدابات 🧾</h2>
 
   <label>الكوبي ايدي</label>
-  <input type="number" id="sec_copyId" placeholder="أدخل الكوبي ايدي">
+  <input type="text" inputmode="numeric" id="sec_copyId" placeholder="أدخل الكوبي ايدي">
 
   <label>اسم المنتدب و كوده</label>
   <input type="text" id="sec_nameCode" placeholder="اكتب الاسم والكود">
@@ -251,7 +331,7 @@
   </select>
 
   <label>الكوبي ايدي</label>
-  <input type="number" id="res_copyId" placeholder="أدخل الكوبي ايدي">
+  <input type="text" inputmode="numeric" id="res_copyId" placeholder="أدخل الكوبي ايدي">
 
   <div id="res_levelBox" style="display:none">
     <label id="res_levelLabel">رقم المستوى</label>
@@ -262,7 +342,7 @@
   <input type="text" id="res_nameCode" placeholder="اكتب الاسم والكود كتابتاً">
 
   <label>كوبي ايدي (التوقيع)</label>
-  <input type="number" id="res_supervisorId" placeholder="أدخل كوبي ايدي (توقيع)">
+  <input type="text" inputmode="numeric" id="res_supervisorId" placeholder="أدخل كوبي ايدي (توقيع)">
 
   <div class="button-row">
     <button class="btn" onclick="res_generate()">إنشاء الرسالة</button>
@@ -282,7 +362,7 @@
   </select>
 
   <label>منشن للمعتمد (الكوبي ايدي)</label>
-  <input type="number" id="acc_copyId" placeholder="أدخل كوبي ايدي المعتمد">
+  <input type="text" inputmode="numeric" id="acc_copyId" placeholder="أدخل كوبي ايدي المعتمد">
 
   <div id="acc_levelBox" style="display:none">
     <label id="acc_levelLabel">رقم المستوى (2 أو 3)</label>
@@ -293,10 +373,10 @@
   <input type="text" id="acc_nameCode" placeholder="مثال:  حـمـد بـن عـسـكـر [CC|G-020]">
 
   <label> منشن لنفسك </label>
-  <input type="number" id="acc_selfId" placeholder="أدخل كوبي ايدي (منشن لنفسك)">
+  <input type="text" inputmode="numeric" id="acc_selfId" placeholder="أدخل كوبي ايدي (منشن لنفسك)">
 
   <label>مسؤول في اعطاء الاذن </label>
-  <input type="number" id="acc_permissionId" placeholder="اكتب كوبي ايدي مسؤول اعطاء الاذن">
+  <input type="text" inputmode="numeric" id="acc_permissionId" placeholder="اكتب كوبي ايدي مسؤول اعطاء الاذن">
 
   <div class="button-row">
     <button class="btn" onclick="acc_generate()">إنشاء</button>
@@ -311,7 +391,7 @@
   <h2>📋المخالفات📋</h2>
 
   <label>الكوبي ايدي</label>
-  <input type="number" id="vio_copyId" placeholder="أدخل الكوبي ايدي">
+  <input type="text" inputmode="numeric" id="vio_copyId" placeholder="أدخل الكوبي ايدي">
 
   <label>رقم الإنذار الوظيفي</label>
   <select id="vio_warningLevel" onchange="vio_toggleByLevel()">
@@ -328,7 +408,7 @@
 
   <div id="vio_supervisorRow">
     <label>كوبي ايدي المشرف</label>
-    <input type="number" id="vio_supervisorId" placeholder="أدخل كوبي ايدي المشرف">
+    <input type="text" inputmode="numeric" id="vio_supervisorId" placeholder="أدخل كوبي ايدي المشرف">
   </div>
 
   <label>المخالفات</label>
@@ -354,7 +434,7 @@
   <h2>🧲نموذج إستدعاء للفني الذي لم يحضر🧲</h2>
 
   <label>الكوبي ايدي:</label>
-  <input type="number" id="abs_copyId" placeholder="أدخل الكوبي ايدي">
+  <input type="text" inputmode="numeric" id="abs_copyId" placeholder="أدخل الكوبي ايدي">
 
   <label>سبب الاستدعاء:</label>
   <div class="custom-dropdown" id="abs_dropdown">
@@ -407,7 +487,7 @@
   </select>
 
   <label>الكوبي ايدي</label>
-  <input type="number" id="ext_copyId" placeholder="أدخل الكوبي ايدي">
+  <input type="text" inputmode="numeric" id="ext_copyId" placeholder="أدخل الكوبي ايدي">
 
   <div id="ext_mainFields">
     <label>مدة الاجازة (بالأيام)</label>
@@ -449,7 +529,7 @@
   <h2>🧾 طلب رول 🧾</h2>
 
   <label>الكوبي ايدي</label>
-  <input type="number" id="role_copyId" placeholder="أدخل الكوبي ايدي">
+  <input type="text" inputmode="numeric" id="role_copyId" placeholder="أدخل الكوبي ايدي">
 
   <label>نوع الطلب</label>
   <div class="checkbox-group" id="role_requests">
@@ -510,6 +590,8 @@
 
   <div id="ticket_output" class="output"></div>
 </div>
+
+</div><!-- /main -->
 
 <script>
 /* ---------- مصدر موحّد لعناصر المخالفات ---------- */
@@ -1619,3 +1701,4 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 </body>
 </html>
+
