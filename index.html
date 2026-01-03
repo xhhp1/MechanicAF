@@ -358,15 +358,15 @@ textarea{ resize:vertical; }
   <label>نوع الاستقالة</label>
   <select id="acc_type" onchange="acc_toggleLevel()">
     <option value="trainee_1">استقالة بمستوى (متدرب & 1)</option>
-    <option value="level_2_3">مستوى 2 و 3</option>
+    <option value="level_2_3_4_5_6_7_8_9">مستوى 2 او اعلى</option>
   </select>
 
   <label>منشن للمعتمد (الكوبي ايدي)</label>
   <input type="text" inputmode="numeric" id="acc_copyId" placeholder="أدخل كوبي ايدي المعتمد">
 
   <div id="acc_levelBox" style="display:none">
-    <label id="acc_levelLabel">رقم المستوى (2 أو 3)</label>
-    <input type="number" id="acc_levelNumber" placeholder="اكتب 2 أو 3 فقط">
+    <label id="acc_levelLabel">رقم المستوى (2 أو اعلى )</label>
+    <input type="number" id="acc_levelNumber" placeholder="اكتب 2 أو على ">
   </div>
 
   <label>اسم و كود المعتمد (كتابة)</label>
@@ -1701,4 +1701,5 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 </body>
 </html>
+
 
