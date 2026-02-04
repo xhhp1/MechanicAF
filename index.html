@@ -326,7 +326,7 @@ textarea{ resize:vertical; }
     <option value="مستوى 1">مستوى 1</option>
     <option value="اعلى">مستوى 2 فأعلى</option>
     <option value="supervisor_4_6">استقالة مشرف من 4-6</option>
-    <option value="retire_7_9">تقاعد مستوى 7-9</option>
+    <option value="retire_7_8">تقاعد مستوى 7-8</option>
   </select>
 
   <label>الكوبي ايدي</label>
@@ -951,8 +951,7 @@ ${nameCode}
 \`توقيع:\`
 <@${signerId}>
 
-\`اعتماد:\`
-<@&1142626604732915812> 
+\`اعتماد مسؤول الاشراف :\`
 <@818887908265033728> 
 <@&1187334915189133352> 
 
@@ -964,8 +963,8 @@ ${nameCode}
   }
 
   if(type === 'retire_7_9'){
-    if(!levelRaw || isNaN(levelNum) || levelNum < 7 || levelNum > 9){
-      alert("⚠️ أدخل رقم مستوى صحيح بين 7 و 9"); return;
+    if(!levelRaw || isNaN(levelNum) || levelNum < 7 || levelNum > 8){
+      alert("⚠️ أدخل رقم مستوى صحيح بين 7 و 8"); return;
     }
     const result =
 `*** ▬▬▬ ﷽ ▬▬
@@ -990,8 +989,7 @@ ${nameCode}
 \`توقيع:\`
 <@${signerId}>
 
-\`اعتماد:\`
-<@&1142626604732915812> 
+\`اعتماد مسؤول الاشراف:\`
 <@818887908265033728> 
 <@&1187334915189133352> 
 
@@ -1702,6 +1700,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 </body>
 </html>
+
 
 
 
