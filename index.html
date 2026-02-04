@@ -900,12 +900,12 @@ function res_toggleLevel(){
   const label = document.getElementById('res_levelLabel');
   const input = document.getElementById('res_levelNumber');
 
-  if(t === 'اعلى' || t === 'supervisor_4_6' || t === 'retire_7_9'){
+  if(t === 'اعلى' || t === 'supervisor_4_6' || t === 'retire_7_8'){
     box.style.display = 'block';
     input.value = '';
     if(t === 'اعلى') label.innerText = 'رقم المستوى (2 فأعلى)';
     if(t === 'supervisor_4_6') label.innerText = 'رقم المستوى (4 - 6)';
-    if(t === 'retire_7_9') label.innerText = 'رقم المستوى (7 - 9)';
+    if(t === 'retire_7_8') label.innerText = 'رقم المستوى (7 - 8)';
   } else {
     box.style.display = 'none';
     input.value = '';
@@ -962,7 +962,7 @@ ${nameCode}
     return;
   }
 
-  if(type === 'retire_7_9'){
+  if(type === 'retire_7_8'){
     if(!levelRaw || isNaN(levelNum) || levelNum < 7 || levelNum > 8){
       alert("⚠️ أدخل رقم مستوى صحيح بين 7 و 8"); return;
     }
