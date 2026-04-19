@@ -326,7 +326,7 @@ textarea{ resize:vertical; }
     <option value="مستوى 1">مستوى 1</option>
     <option value="اعلى">مستوى 2 فأعلى</option>
     <option value="supervisor_4_6">استقالة مشرف من 4-6</option>
-    <option value="retire_7_9">تقاعد مستوى 7-9</option>
+    <option value="retire_7_8">تقاعد مستوى 7-8</option>
   </select>
 
   <label>الكوبي ايدي</label>
@@ -900,12 +900,12 @@ function res_toggleLevel(){
   const label = document.getElementById('res_levelLabel');
   const input = document.getElementById('res_levelNumber');
 
-  if(t === 'اعلى' || t === 'supervisor_4_6' || t === 'retire_7_9'){
+  if(t === 'اعلى' || t === 'supervisor_4_6' || t === 'retire_7_8'){
     box.style.display = 'block';
     input.value = '';
     if(t === 'اعلى') label.innerText = 'رقم المستوى (2 فأعلى)';
     if(t === 'supervisor_4_6') label.innerText = 'رقم المستوى (4 - 6)';
-    if(t === 'retire_7_9') label.innerText = 'رقم المستوى (7 - 9)';
+    if(t === 'retire_7_8') label.innerText = 'رقم المستوى (7 - 8)';
   } else {
     box.style.display = 'none';
     input.value = '';
@@ -951,10 +951,10 @@ ${nameCode}
 \`توقيع:\`
 <@${signerId}>
 
-\`اعتماد:\`
-<@&1142626604732915812> 
-<@818887908265033728> 
+\`اعتماد مسؤول الاشراف :\`
+<@1182445629721563177> 
 <@&1092120226478428200> 
+
 \`يرسل الاصل الى : \`
 <@&1149742928953086105> ***`;
     const out = document.getElementById('res_output');
@@ -962,9 +962,9 @@ ${nameCode}
     return;
   }
 
-  if(type === 'retire_7_9'){
-    if(!levelRaw || isNaN(levelNum) || levelNum < 7 || levelNum > 9){
-      alert("⚠️ أدخل رقم مستوى صحيح بين 7 و 9"); return;
+  if(type === 'retire_7_8'){
+    if(!levelRaw || isNaN(levelNum) || levelNum < 7 || levelNum > 8){
+      alert("⚠️ أدخل رقم مستوى صحيح بين 7 و 8"); return;
     }
     const result =
 `*** ▬▬▬ ﷽ ▬▬
@@ -989,10 +989,10 @@ ${nameCode}
 \`توقيع:\`
 <@${signerId}>
 
-\`اعتماد:\`
-<@&1142626604732915812> 
-<@818887908265033728> 
+\`اعتماد مسؤول الاشراف:\`
+<@1182445629721563177> 
 <@&1092120226478428200> 
+
 \`يرسل الاصل الى : \`
 <@&1149742928953086105> ***`;
     const out = document.getElementById('res_output');
@@ -1028,9 +1028,10 @@ ${nameCode}
 
 \`اعتماد:\` <@${signerId}>
 
+
 \`توقيع مدير الخزينة: \`
-<@1182445629721563177> 
-<@&1071933343123386429> 
+<@680393068469682256>
+<@&1071933343123386429>
 
 يرسل الاصل الى : 
 <@&1149742928953086105> ***`;
@@ -1061,6 +1062,7 @@ ${nameCode}
 
 \`توقيع واعتماد:\`
 <@${signerId}>
+
 
 \`يرسل الاصل الى : \`
 <@&1149742928953086105> ***`;
@@ -1124,12 +1126,12 @@ ${nameCode}
 \`اعتماد:\` <@${selfId}>
 
 \`اعتماد مدير قسم شؤون المعتمدين:\`
-<@571068478753341453> 
+<@1282062186579230792> 
 <@&1092120390324731994> 
 
 \`توقيع مدير الخزينة: \`
-<@1182445629721563177> 
-<@&1071933343123386429> 
+<@680393068469682256>
+<@&1071933343123386429>
 
 \`للمتابعة:\`
 ( <@${permId}> )
@@ -1166,7 +1168,7 @@ ${nameCode}
 <@${selfId}>
 
 \`اعتماد:\`
-<@571068478753341453> 
+<@1282062186579230792> 
 <@&1092120390324731994> 
 
 \`للمتابعة:\`
@@ -1236,10 +1238,6 @@ function vio_generate(){
 \`نوع السحب : \`  [فاتورة](رابط الفاتورة) 
 
 \`اعتماد:\` <@${supervisorId}>
-
-\`توقيع مدير الخزينة \`
-<@1182445629721563177> 
-<@&1071933343123386429> 
 
 يرسل الاصل الى : 
 <@&1149742928953086105> ***`;
@@ -1428,7 +1426,7 @@ function ext_generate(){
 ***\`نسخة للقرار :\` ( ${link} ) ***
 
 ***\`للعلم والاحاطة/\`***
-<@1059976190988910772> & <@818887908265033728>`;
+<@1069596605080162397> & <@1329539822028849152>`;
       const out = document.getElementById('ext_output');
       out.innerText = result; out.style.display='block';
       return;
@@ -1448,7 +1446,7 @@ function ext_generate(){
 ***\`نسخة للقرار :\` ( ${link} ) ***
 
 ***\`للعلم والاحاطة/\`***
-<@1140931533285367852>&<@818887908265033728>`;
+<@451806885419679765>`;
     const out = document.getElementById('ext_output');
     out.innerText = resultSupervisor; out.style.display='block';
     return;
@@ -1474,7 +1472,7 @@ function ext_generate(){
 ***\`نسخة للقرار :\`*** *** ( ${link} ) ***
 
 ***\`للعلم والاحاطة/\`***
-<@1059976190988910772> & <@792640279684710412> & <@1069596605080162397>`;
+<@1069596605080162397> & <@1329539822028849152> `;
       const out = document.getElementById('ext_output');
       out.innerText = result; out.style.display='block';
       return;
@@ -1490,7 +1488,7 @@ function ext_generate(){
 ***\`نسخة للقرار :\` ( ${link} ) ***
 
 ***\`للعلم والاحاطة/\`***
-<@1140931533285367852>&<@818887908265033728>`;
+<@1301978810379534346> &  <@451806885419679765>`;
     const out = document.getElementById('ext_output');
     out.innerText = resultSupervisor; out.style.display='block';
     return;
@@ -1702,4 +1700,3 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 </body>
 </html>
-
